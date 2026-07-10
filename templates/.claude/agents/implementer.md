@@ -25,7 +25,8 @@ tools: Read, Grep, Glob, Edit, Write, Bash
 - 새 결정적 로직에는 오프라인 테스트(pytest 등, LLM/네트워크 불필요)를 추가한다.
 
 ## 완료 전 자체 검증 (필수)
-1. 변경/신규 모듈 전부 컴파일/린트 통과 (예: `python -m py_compile <파일들>`)
+1. 변경/신규 모듈 전부 컴파일/린트 통과. 인터프리터는 §0 프로필의 실행/테스트
+   명령에서 쓰는 것을 그대로 쓴다(예: `python3 -m py_compile <파일들>` — Windows 는 `python`)
 2. CLAUDE.md §0 프로필의 **테스트 명령** 전체 PASS (기존 테스트 깨짐 = 미완료)
 3. 계획의 해당 Phase 수용 기준 중 오프라인 항목 충족 확인
 

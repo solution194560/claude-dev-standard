@@ -36,7 +36,8 @@ $KIT = "경로\claude-dev-standard"     # 이 킷의 위치
 $PROJ = "경로\my-project"             # 내 프로젝트
 
 Copy-Item "$KIT\templates\CLAUDE.md.template" "$PROJ\CLAUDE.md"
-Copy-Item "$KIT\templates\.claude" "$PROJ\.claude" -Recurse
+New-Item -ItemType Directory -Force -Path "$PROJ\.claude" | Out-Null
+Copy-Item "$KIT\templates\.claude\*" "$PROJ\.claude" -Recurse -Force
 Rename-Item "$PROJ\.claude\settings.json.example" "settings.json"
 ```
 
@@ -46,9 +47,13 @@ KIT=경로/claude-dev-standard
 PROJ=경로/my-project
 
 cp "$KIT/templates/CLAUDE.md.template" "$PROJ/CLAUDE.md"
-cp -r "$KIT/templates/.claude" "$PROJ/.claude"
+mkdir -p "$PROJ/.claude"
+cp -R "$KIT/templates/.claude/." "$PROJ/.claude/"
 mv "$PROJ/.claude/settings.json.example" "$PROJ/.claude/settings.json"
 ```
+
+> `.claude` 폴더가 **이미 있는** 프로젝트에도 안전합니다. 위 형태(`mkdir -p` +
+> `.claude/.` 복사)를 쓰지 않고 폴더 자체를 복사하면 `.claude/.claude` 로 중첩됩니다.
 
 복사 후 내 프로젝트 구조:
 ```
