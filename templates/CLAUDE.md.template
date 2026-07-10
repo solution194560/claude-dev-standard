@@ -14,8 +14,8 @@
 | 항목 | 값 |
 |---|---|
 | 개요 | {{프로젝트 개요 — 한두 문장}} |
-| 실행 명령 | `{{실행 명령 — 예: .venv\Scripts\python.exe main.py}}` |
-| 테스트 명령 | `{{테스트 명령 — 예: .venv\Scripts\python.exe -m pytest tests/ -v}}` |
+| 실행 명령 | `{{실행 명령 — 예: .venv/bin/python main.py (Windows: .venv\Scripts\python.exe main.py)}}` |
+| 테스트 명령 | `{{테스트 명령 — 예: .venv/bin/python -m pytest tests/ -v}}` |
 | 주요 산출물 경로 | {{예: results/ 폴더의 *.json, *.md}} |
 | 외부 점검 도구 | {{Codex 등 점검 CLI 실행 명령 — 없으면 "없음"}} |
 
@@ -23,7 +23,7 @@
 <!-- 운영 시스템에 실제로 반영되는 명령을 모두 나열하세요.
      에이전트는 이 목록의 명령을 절대 실행하지 않고, 드라이런 출력까지만 확인합니다. -->
 - {{예: post_comments.py --apply — 실제 댓글 게시}}
-- {{예: deploy.ps1 — 운영 배포}}
+- {{예: deploy.sh (Windows: deploy.ps1) — 운영 배포}}
 - 대화형 확인 프롬프트(`[y/N]`)에 `y` 응답하는 행위 일체
 
 ## 1) 작업 원칙 (무조건 준수)
@@ -46,13 +46,14 @@ CHANGELOG.md 맨 위에 기록할 것.**
 먼저 읽는다.
 
 ## 3) 실행
-```powershell
+<!-- Windows 프로젝트라면 아래 두 블록의 bash 를 powershell 로 바꾸세요. -->
+```bash
 cd {{프로젝트 루트 경로}}
 {{실행 명령}}
 ```
 
-테스트:
-```powershell
+테스트
+```bash
 {{테스트 명령}}
 ```
 

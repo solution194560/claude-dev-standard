@@ -89,8 +89,9 @@ claude-dev-standard/
 - **호출 방법** — 자연어 호출 예시 5개
 - **에이전트 파일 구조** — frontmatter(name/description/model/tools) 설명,
   모델 교체는 `model:` 한 줄, 도구 제한이 안전장치(점검 계열에 Edit 없음은 의도)
-- **Codex 연동 (기본 권장)** — 최초 설정 3단계(설치 확인 → `[windows] sandbox =
-  "unelevated"` 필수 설정 → CLAUDE.md 프로필에 정규 명령 기재), 주의사항, 문제 해결 표
+- **Codex 연동 (기본 권장)** — 최초 설정 3단계(설치 확인 → Windows 전용 `[windows]
+  sandbox = "unelevated"` 설정 → CLAUDE.md 프로필에 정규 명령 기재). macOS·Linux와
+  Windows 명령을 각각 병기. 주의사항, 플랫폼별 문제 해결 표
 - **Codex 없이 쓸 때** — 미설정(`없음` 기재)·실행 실패(자동 폴백)·이번만 제외, 3경로와 한계
 
 ### 04_rules.md
@@ -186,7 +187,7 @@ CLAUDE.md §0 "위험 작업 목록"의 실쓰기 실행.
 
 | 항목 | 내용 |
 |---|---|
-| 모델 / 도구 | Opus / Read·Grep·Glob·Write·Bash·PowerShell (**Edit 없음** — 소스 수정 불가를 도구로 강제) |
+| 모델 / 도구 | Opus / Read·Grep·Glob·Write·Bash (**Edit 없음** — 소스 수정 불가를 도구로 강제) |
 | 산출물 | `<PLAN>_REVIEW.md` — **APPROVE / REVISE** |
 | 핵심 규칙 | CLAUDE.md §0 "외부 점검 도구" 설정 시 **그 도구(Codex) 결과가 판정 기준**(지시문 파일 → stdin 파이프, 비판적 검토 역할 지시 주입). 미설정/실패 시 직접 점검 폴백(사유 명기). 점검 관점: 사실 대조·정책 정합성·완결성·위험·테스트 검증 가능성 + 계획의 "확인 요청 사항"에 전부 답변 |
 | 금지 | 소스·계획 문서 수정 (보고서만) |
@@ -195,7 +196,7 @@ CLAUDE.md §0 "위험 작업 목록"의 실쓰기 실행.
 
 | 항목 | 내용 |
 |---|---|
-| 모델 / 도구 | Sonnet / Read·Grep·Glob·**Edit·Write**·Bash·PowerShell (5종 중 유일하게 소스 수정 가능) |
+| 모델 / 도구 | Sonnet / Read·Grep·Glob·**Edit·Write**·Bash (5종 중 유일하게 소스 수정 가능) |
 | 산출물 | 코드 + CHANGELOG 기록 (Phase 단위) |
 | 핵심 규칙 | **착수 조건: REVIEW가 APPROVE** (아니면 보고 후 종료). 지시받은 Phase만 구현(선행 금지). 계획과 다르게 해야 하면 임의 변경 대신 편차 보고. 새 결정적 로직에 오프라인 테스트 추가 의무. 완료 전 자체 검증: 컴파일 + 전체 테스트 PASS + 수용 기준 확인 |
 | 금지 | 실쓰기 게이트(드라이런 기본값·확인 프롬프트) 우회 코드 작성, 실쓰기 실행 |
@@ -204,7 +205,7 @@ CLAUDE.md §0 "위험 작업 목록"의 실쓰기 실행.
 
 | 항목 | 내용 |
 |---|---|
-| 모델 / 도구 | Opus / Read·Grep·Glob·Write·Bash·PowerShell (**Edit 없음**) |
+| 모델 / 도구 | Opus / Read·Grep·Glob·Write·Bash (**Edit 없음**) |
 | 산출물 | `<PLAN>_VERIFY_<phase>.md` — **PASS / FAIL** |
 | 핵심 규칙 | 코드 리뷰는 외부 도구(Codex) 우선·결과가 판정 기준, 실패 시 직접 폴백. **테스트는 도구와 무관하게 항상 직접 실행** — 구현자의 "통과" 보고 불신, **테스트 실패 = 외부 리뷰가 PASS여도 최종 FAIL**. 안전 규칙 감사(실쓰기 게이트 우회·정책 파일 광범위 수정·의존성 임의 변경 = 즉시 FAIL). scope creep(계획 밖 무단 변경)도 결함 |
 | 금지 | 소스 수정 (결함은 보고만 — 수정은 implementer 몫) |
@@ -213,7 +214,7 @@ CLAUDE.md §0 "위험 작업 목록"의 실쓰기 실행.
 
 | 항목 | 내용 |
 |---|---|
-| 모델 / 도구 | Sonnet / Read·Grep·Glob·Write·Bash·PowerShell (**Edit 없음**) |
+| 모델 / 도구 | Sonnet / Read·Grep·Glob·Write·Bash (**Edit 없음**) |
 | 산출물 | `<PLAN>_FINAL_<phase>.md` — **DONE / BLOCKED** |
 | 핵심 규칙 | **착수 조건: VERIFY가 PASS**. 사용자 관점 실데이터 e2e — 읽기 작업은 실제 실행, **쓰기 작업은 드라이런까지만**(드라이런 출력으로 쓰기 계획의 정확성 판정). e2e 스모크(회귀 테스트 + 실행 명령 소량 산출물 표본 검사). DONE 시 CHANGELOG 해당 기록에 "최종 테스트 통과(날짜)" 추가 |
 | 금지 | 소스 수정 (결함 발견 시 BLOCKED 보고), 실쓰기 실행 |

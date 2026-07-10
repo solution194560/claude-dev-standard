@@ -74,8 +74,8 @@ my-project/
 |---|---|---|
 | `{{프로젝트명}}` | 프로젝트 이름 | `주문관리시스템` |
 | `{{프로젝트 개요}}` | 한 문단 설명 | `사내 주문 티켓 자동 분류 시스템` |
-| `{{실행 명령}}` | 앱/파이프라인 실행 | `.venv\Scripts\python.exe main.py` |
-| `{{테스트 명령}}` | 오프라인 테스트 | `.venv\Scripts\python.exe -m pytest tests/ -v` |
+| `{{실행 명령}}` | 앱/파이프라인 실행 | `.venv/bin/python main.py` (Windows: `.venv\Scripts\python.exe main.py`) |
+| `{{테스트 명령}}` | 오프라인 테스트 | `.venv/bin/python -m pytest tests/ -v` |
 | `{{위험 작업 목록}}` | 실쓰기(운영 반영) 명령과 게이트 | `post_comments.py --apply (댓글 실게시)` |
 | `{{외부 점검 도구}}` | (선택) Codex 등 점검 CLI 실행 명령 | 없으면 `없음` 이라고 적기 |
 

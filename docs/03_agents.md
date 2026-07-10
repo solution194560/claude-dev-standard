@@ -65,25 +65,54 @@ flowchart LR
 
 ### 최초 설정 (한 번만)
 
-**① 설치 확인:**
+**① 설치 확인**
+
+macOS / Linux:
+```bash
+codex --version
+```
+
+Windows (PowerShell):
 ```powershell
 & "$env:LOCALAPPDATA\Programs\OpenAI\Codex\bin\codex.exe" --version
 ```
+
 버전이 나오면 OK. 없으면 Codex CLI 설치 후 `codex login`까지 마치세요.
 
-**② Windows 필수 설정 — 무응답 예방:**
+> **macOS에서 `codex not found`가 뜬다면** — ChatGPT 데스크톱 앱을 설치한 경우
+> Codex CLI가 앱 번들 안에 들어 있고 PATH에는 노출되지 않습니다. 이때는 절대경로를
+> 쓰거나, 아래처럼 PATH에 심볼릭 링크를 걸어두면 이후 예시를 그대로 쓸 수 있습니다.
+> ```bash
+> ls "/Applications/ChatGPT.app/Contents/Resources/codex"   # 존재 확인
+> sudo ln -s "/Applications/ChatGPT.app/Contents/Resources/codex" /usr/local/bin/codex
+> ```
+> `/usr/local/bin`은 보통 쓰기에 `sudo`가 필요합니다. 앱을 업데이트하면 링크가
+> 끊길 수 있으니, 끊기면 `codex --version`으로 확인하고 다시 걸어주세요.
+
+**② Windows 전용 필수 설정 — 무응답 예방**
+
+> macOS·Linux 사용자는 이 단계를 건너뛰세요. `[windows]` 섹션은 적용되지 않습니다.
+
 `~/.codex/config.toml`(= `C:\Users\<사용자>\.codex\config.toml`)에 다음이 있어야 합니다:
 ```toml
 [windows]
 sandbox = "unelevated"
 ```
 이 값이 `elevated`면 `ShellExecuteExW 1223` 오류로 **응답 없이 멈춥니다.**
-Codex가 무응답이면 항상 이 값부터 확인하세요.
+Windows에서 Codex가 무응답이면 항상 이 값부터 확인하세요.
 
-**③ CLAUDE.md 프로필에 실행 명령 기재:**
+**③ CLAUDE.md 프로필에 실행 명령 기재**
 
+지시문을 파일로 저장한 뒤 stdin 으로 파이프합니다(특수문자·인코딩 깨짐 방지).
+
+macOS / Linux (`codex`가 PATH에 없으면 그 자리에 절대경로를 넣으세요):
+```bash
+cat "<지시문파일>" |
+  codex exec --skip-git-repo-check -C "<프로젝트 루트>" --sandbox read-only -
+```
+
+Windows (PowerShell):
 ```powershell
-# 지시문 파일을 stdin으로 파이프 (특수문자·인코딩 깨짐 방지)
 Get-Content <지시문파일> -Raw -Encoding UTF8 |
   & "$env:LOCALAPPDATA\Programs\OpenAI\Codex\bin\codex.exe" exec `
     --skip-git-repo-check -C "<프로젝트 루트>" --sandbox read-only -
@@ -101,12 +130,13 @@ Get-Content <지시문파일> -Raw -Encoding UTF8 |
 
 ### 문제 해결
 
-| 증상 | 확인할 것 |
-|---|---|
-| 응답 없이 멈춤 | `~/.codex/config.toml`의 `[windows] sandbox = "unelevated"` 인지 |
-| 명령을 못 찾음 | `%LOCALAPPDATA%\Programs\OpenAI\Codex\bin`에 codex.exe 있는지 |
-| 인증 오류 | `codex login` 재실행 |
-| 한글 깨짐 | 지시문을 UTF-8 파일로 저장 후 stdin 파이프 방식인지 |
+| 증상 | 플랫폼 | 확인할 것 |
+|---|---|---|
+| 응답 없이 멈춤 | Windows | `~/.codex/config.toml`의 `[windows] sandbox = "unelevated"` 인지 |
+| 명령을 못 찾음 | macOS·Linux | `which codex` 확인. 안 잡히면 ChatGPT 데스크톱 앱 번들 경로(`/Applications/ChatGPT.app/Contents/Resources/codex`)를 쓰거나 심볼릭 링크 |
+| 명령을 못 찾음 | Windows | `%LOCALAPPDATA%\Programs\OpenAI\Codex\bin`에 codex.exe 있는지 |
+| 인증 오류 | 공통 | `codex login` 재실행 |
+| 한글 깨짐 | 공통 | 지시문을 UTF-8 파일로 저장 후 stdin 파이프 방식인지 |
 
 ### Codex 없이 쓸 때 (폴백 경로)
 
