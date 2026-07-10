@@ -11,6 +11,17 @@
       "Bash(git diff*)",
       "Bash(git log*)"
     ],
-    "deny": []
+    "deny": [
+      "Bash(*--apply*)",
+      "Bash(*--no-dry-run*)",
+      "Bash(*--yes*)",
+      "Bash(git push*)",
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(**/.env)",
+      "Edit(.env)",
+      "Edit(.env.*)",
+      "Edit(**/.env)"
+    ]
   }
 }

@@ -118,8 +118,11 @@ my-project/
 아니요. 단건 수정 경로(구현 → 테스트 → 실데이터 확인)가 있습니다 — [02_process.md](02_process.md#5단계를-생략할-수-있는-경우) 참조.
 
 **Q. settings.json은 뭘 하는 파일인가요?**
-Claude Code의 도구 사용 권한(자동 허용/차단 목록)입니다. 기본 예시는 테스트 실행 정도만
-자동 허용합니다. 팀 공유용은 `settings.json`, 개인용은 `settings.local.json`(git 제외)을 쓰세요.
+Claude Code의 도구 사용 권한(자동 허용/차단 목록)입니다. `allow`는 테스트 실행 정도만
+자동 허용하고, `deny`는 킷의 안전 금지선(실쓰기·게이트 우회·시크릿)을 실제로 차단합니다.
+**CLAUDE.md §0 위험 작업 목록에 명령을 추가하면 `deny`에도 같이 추가하세요** —
+[04_rules.md](04_rules.md#지시문과-강제는-다르다) 참조. 팀 공유용은 `settings.json`,
+개인용은 `settings.local.json`(git 제외)을 쓰세요.
 
 **Q. 작업을 하다가 세션을 닫아야 하면?**
 "SESSION.md에 체크포인트 남겨줘"라고 한 뒤 닫고, 다음 세션에서 "SESSION.md 읽고

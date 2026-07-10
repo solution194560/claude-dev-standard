@@ -164,7 +164,11 @@ claude-dev-standard/
 
 ### .claude/settings.json.example → `.claude/settings.json`
 
-Claude Code 도구 권한(자동 허용/차단) 설정. 기본 예시는 테스트 실행 정도만 자동 허용.
+Claude Code 도구 권한 설정. `allow`는 테스트 실행 정도만 자동 허용하고, `deny`는
+킷의 안전 금지선을 **강제**한다(실쓰기 `--apply`·`git push`, 게이트 우회 `--yes`,
+시크릿 `.env`). `deny`가 `allow`보다 먼저 평가되므로 `Read(**)`가 있어도 `.env`는 막힌다.
+**CLAUDE.md §0 위험 작업 목록과 짝을 맞춰 갱신할 것** — 한쪽만 고치면 강제가 사라진다.
+한계는 [04_rules.md](04_rules.md#지시문과-강제는-다르다) 참조.
 팀 공유는 `settings.json`, 개인 전용은 `settings.local.json`(git 제외).
 
 ### .claude/agents/ — 서브에이전트 5종 (수정 없이 복사)
