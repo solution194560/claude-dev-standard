@@ -52,17 +52,25 @@ python3 -c "import json;json.load(open('templates/.claude/settings.json.example'
 | 단계 | 에이전트 | 산출물(게이트) |
 |---|---|---|
 | 1 계획 수립 | plan-writer | PLAN_<주제>.md |
-| 2 계획 점검 | plan-reviewer | *_REVIEW.md — APPROVE/REVISE |
+| 2 계획 점검 | plan-reviewer | *_REVIEW.md — APPROVE/REVISE **권고** |
 | 3 구현 | implementer | 코드 + CHANGELOG (Phase 단위) |
-| 4 구현 검증 | impl-verifier | *_VERIFY_*.md — PASS/FAIL |
-| 5 최종 테스트 | final-tester | *_FINAL_*.md — DONE/BLOCKED |
+| 4 구현 검증 | impl-verifier | *_VERIFY_*.md — PASS/FAIL **권고** |
+| 5 최종 테스트 | final-tester | *_FINAL_*.md — DONE/BLOCKED **권고** |
+| 판정 | gate-judge | *_JUDGE.md — 위 게이트(2·4·5)의 판정 **확정** |
 
+- **게이트 판정은 gate-judge 가 확정한다.** 점검·검증·최종 테스트 에이전트는 증거를
+  모으고 **권고**만 하며, 그 직후 반드시 gate-judge 를 호출해 판정(APPROVE/REVISE,
+  PASS/FAIL, DONE/BLOCKED)을 확정한다. 게이트 에이전트의 권고만으로 다음 단계에
+  진행하지 않는다(증거 수집자와 판정자 분리). 호출 예: "gate-judge 로 구현 검증 판정해줘"
 - 점검(2)·검증(4)은 §0 프로필의 "외부 점검 도구"가 설정된 경우 그 도구의 결과를
   판정 기준으로 삼는다(도구 실패 시 에이전트 직접 점검 폴백, 사유 명기).
   테스트 실행은 도구와 무관하게 에이전트가 항상 직접 수행.
 - 모든 에이전트: §0 "위험 작업 목록"의 실쓰기 금지(드라이런까지).
 - 단건 수정(버그픽스 등)은 경량 경로 가능: 설계 확인 → 구현 → 테스트 →
   실데이터 확인 → CHANGELOG 기록.
+- **에러 대응 경로**(테스트 실패·운영 에러): error-analyst 로 근본 원인 분석
+  (`FIX_<주제>.md`) → implementer 수정 → 검증 → gate-judge 판정. error-analyst 는
+  코드를 고치지 않고 분석만 한다.
 - 호출 예: "plan-reviewer 서브에이전트로 PLAN_<주제>.md 점검해줘"
 
 ## 5) 정책 요약

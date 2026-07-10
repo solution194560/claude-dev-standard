@@ -1,7 +1,8 @@
-# 03. 서브에이전트 5종
+# 03. 서브에이전트 7종
 
-`.claude/agents/`에 있는 5개 에이전트가 5단계 프로세스의 각 단계를 담당합니다.
-에이전트는 프로젝트 고유 정보(실행/테스트 명령, 위험 작업)를 **CLAUDE.md의
+`.claude/agents/`에 있는 7개 에이전트 중 5개가 5단계 프로세스의 각 단계를 맡고,
+**gate-judge**가 게이트 판정을 확정하며, **error-analyst**가 별도 에러 대응 경로를
+담당합니다. 에이전트는 프로젝트 고유 정보(실행/테스트 명령, 위험 작업)를 **CLAUDE.md의
 "프로젝트 프로필" 섹션에서 읽으므로**, 에이전트 파일 자체는 수정 없이 재사용됩니다.
 
 ## 한눈에 보기
@@ -9,13 +10,18 @@
 | # | 에이전트 | 기본 모델 | 역할 | 산출물 | 소스 수정 |
 |---|---|---|---|---|---|
 | 1 | plan-writer | Opus | 계획 문서 작성 | `PLAN_*.md` | ❌ |
-| 2 | plan-reviewer | Opus | 계획 비판적 점검 | `*_REVIEW.md` (APPROVE/REVISE) | ❌ |
+| 2 | plan-reviewer | Opus | 계획 비판적 점검 | `*_REVIEW.md` (APPROVE/REVISE 권고) | ❌ |
 | 3 | implementer | Sonnet | 계획대로 구현 | 코드 + CHANGELOG | ✅ |
-| 4 | impl-verifier | Opus | 구현 검증 + 테스트 직접 실행 | `*_VERIFY_*.md` (PASS/FAIL) | ❌ |
-| 5 | final-tester | Sonnet | 실데이터 e2e 최종 테스트 | `*_FINAL_*.md` (DONE/BLOCKED) | ❌ (CHANGELOG만) |
+| 4 | impl-verifier | Opus | 구현 검증 + 테스트 직접 실행 | `*_VERIFY_*.md` (PASS/FAIL 권고) | ❌ |
+| 5 | final-tester | Sonnet | 실데이터 e2e 최종 테스트 | `*_FINAL_*.md` (DONE/BLOCKED 권고) | ❌ |
+| — | gate-judge | Opus | 게이트 판정 **확정**(2·4·5단계) | `*_JUDGE.md` | ❌ (CHANGELOG만) |
+| — | error-analyst | Opus | 에러 근본 원인 분석·수정 방향 | `FIX_*.md` | ❌ |
 
 > 역할 분리 원칙: **점검/검증/테스트 에이전트는 절대 소스를 고치지 않습니다.**
 > 결함은 보고만 하고, 수정은 항상 implementer가 합니다. (심판과 선수의 분리)
+>
+> 한 걸음 더 — 게이트 에이전트(2·4·5)는 증거를 모으고 **권고**만 하며, 최종 판정은
+> gate-judge가 확정합니다. 증거를 만든 자가 스스로 채점하지 못하게 하는 장치입니다.
 
 ## 호출 방법
 
@@ -24,10 +30,17 @@ Claude Code 대화에서 자연어로 부르면 됩니다:
 ```
 "로그인 기능 계획 세워줘"                    → plan-writer
 "plan-reviewer로 PLAN_로그인.md 점검해줘"    → plan-reviewer
+"gate-judge로 점검 판정 확정해줘"            → gate-judge (2단계 판정)
 "PLAN_로그인.md Phase A 구현해줘"            → implementer
 "impl-verifier로 Phase A 구현 검증해줘"      → impl-verifier
+"gate-judge로 검증 판정 확정해줘"            → gate-judge (4단계 판정)
 "final-tester로 최종 테스트해줘"             → final-tester
+"gate-judge로 최종 판정 확정해줘"            → gate-judge (5단계 판정)
+"이 에러 원인 분석해줘"                      → error-analyst
 ```
+
+게이트 에이전트(2·4·5)를 부른 뒤에는 **gate-judge로 판정을 확정**합니다 — 게이트
+에이전트의 권고만으로 다음 단계에 넘어가지 않습니다.
 
 ## 에이전트 파일 구조 (수정하고 싶을 때)
 
@@ -53,8 +66,10 @@ tools: Read, Grep, Glob, Write, Edit   # 허용 도구 (최소 권한)
 설계지만, **소스 수정을 도구 수준에서 막지는 못합니다** — `Write`는 파일을 통째로 덮어쓸 수
 있고 `Bash`가 있으면 `sed -i` 한 줄이면 됩니다. 소스 수정 금지는 결국 **지시문으로 지키는
 규칙**입니다. 임의로 `Edit`를 추가하지 마세요(방어가 한 겹 더 얇아집니다).
-예외는 final-tester 하나입니다 — DONE 판정 시 CHANGELOG.md 에 한 줄을 덧붙여야 하므로
-`Edit`를 갖되, 지시문에서 **CHANGELOG 전용**으로 못박았습니다.
+예외는 gate-judge 하나입니다 — 최종 테스트를 DONE으로 확정할 때 CHANGELOG.md 에
+"최종 테스트 통과" 한 줄을 덧붙여야 하므로 `Edit`를 갖되, 지시문에서 **CHANGELOG
+전용**으로 못박았습니다(판정자가 판정 결과를 기록). final-tester 는 `Edit` 없이
+보고서 `Write` 만 합니다.
 
 ## 외부 점검 도구 연동 (기본 권장) — Codex CLI
 

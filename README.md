@@ -3,7 +3,7 @@
 Claude Code로 개발을 시작할 때 **초기 세팅 → 5단계 게이트 개발 프로세스**를
 바로 적용할 수 있게 해주는 표준 패키지입니다.
 
-- ✅ 제공하는 것: Claude 설정 템플릿(CLAUDE.md), 서브에이전트 5종, 개발 규칙, 초보자 가이드
+- ✅ 제공하는 것: Claude 설정 템플릿(CLAUDE.md), 서브에이전트 7종, 개발 규칙, 초보자 가이드
 - ❌ 제공하지 않는 것: 애플리케이션 코드 (이 킷은 "개발하는 방법"의 표준이지 특정 앱이 아님)
 
 ---
@@ -40,7 +40,7 @@ claude-dev-standard/               ← 이 킷 (원본은 그대로 둠)
 │   ├── 00_files.md                    모든 파일의 상세 설명서
 │   ├── 01_quickstart.md               10분 시작 가이드 (복사·치환·첫 실행)
 │   ├── 02_process.md                  5단계 게이트 상세 규칙
-│   ├── 03_agents.md                   에이전트 5종 + Codex 연동법
+│   ├── 03_agents.md                   에이전트 7종 + Codex 연동법
 │   ├── 04_rules.md                    개발 규칙과 그 이유
 │   ├── 05_session.md                  세션 이어가기 (중단·재개)
 │   └── 06_cost.md                     토큰 비용 아끼는 법
@@ -48,7 +48,6 @@ claude-dev-standard/               ← 이 킷 (원본은 그대로 둠)
 └── templates/                     ← 📦 "부품" — 내 프로젝트로 복사할 파일들
     ├── CLAUDE.md.template             → 내 프로젝트의 CLAUDE.md 가 됨
     ├── CHANGELOG.md.template          → 내 프로젝트의 CHANGELOG.md 가 됨
-    ├── SESSION.md.template            → 첫 중단 때 SESSION.md 로 생성됨
     ├── .gitignore.example             → 내 프로젝트의 .gitignore 가 됨
     └── .claude/
         ├── settings.json.example      → .claude/settings.json 이 됨
@@ -57,7 +56,9 @@ claude-dev-standard/               ← 이 킷 (원본은 그대로 둠)
             ├── plan-reviewer.md           (2단계: 계획 검토 담당)
             ├── implementer.md             (3단계: 코드 구현 담당)
             ├── impl-verifier.md           (4단계: 구현 검증 담당)
-            └── final-tester.md            (5단계: 최종 테스트 담당)
+            ├── final-tester.md            (5단계: 최종 테스트 담당)
+            ├── gate-judge.md              (게이트 판정 확정)
+            └── error-analyst.md           (에러 근본 원인 분석)
 ```
 
 **복사하고 나면 내 프로젝트가 이렇게 됩니다:**
@@ -69,7 +70,7 @@ my-project/                        ← 내가 개발할 프로젝트
 ├── .gitignore
 ├── .claude/
 │   ├── settings.json              ← 도구 권한 설정 (기본값 그대로 가능)
-│   └── agents/  (5종)             ← 수정 없이 그대로 사용
+│   └── agents/  (7종)             ← 수정 없이 그대로 사용
 └── (내 소스 코드...)
 ```
 
@@ -77,7 +78,7 @@ my-project/                        ← 내가 개발할 프로젝트
 
 - **킷 폴더 자체에서 개발하는 게 아닙니다.** 킷은 "부품 창고"이고, 부품(templates)을
   내 프로젝트로 복사한 뒤에는 내 프로젝트 폴더에서만 작업합니다.
-- **내가 편집하는 파일은 사실상 `CLAUDE.md` 하나입니다.** 에이전트 5종은 프로젝트
+- **내가 편집하는 파일은 사실상 `CLAUDE.md` 하나입니다.** 에이전트 7종은 프로젝트
   고유 정보(실행 명령·테스트 명령·위험 작업)를 전부 CLAUDE.md의 "프로젝트 프로필"
   절에서 읽어가므로, 에이전트 파일은 손댈 필요가 없습니다.
 - `docs/`는 언제든 다시 와서 읽는 참고서입니다. 복사하지 않습니다.
@@ -88,7 +89,7 @@ my-project/                        ← 내가 개발할 프로젝트
 flowchart LR
     U["👤 나<br/>(대화로 지시)"] --> CC["Claude Code"]
     CC -->|"매 대화마다 자동으로 읽음"| CM["CLAUDE.md<br/>(프로젝트 프로필·규칙)"]
-    CC -->|"단계별로 호출"| AG["에이전트 5종<br/>(.claude/agents/)"]
+    CC -->|"단계별로 호출"| AG["에이전트 7종<br/>(.claude/agents/)"]
     AG -->|"프로필 참조<br/>(실행·테스트·위험 목록)"| CM
     AG -->|"2·4단계 리뷰 의뢰<br/>(기본 권장)"| CX["Codex CLI<br/>(외부 리뷰어)"]
 ```
@@ -115,13 +116,21 @@ flowchart TD
     P5 -->|"✅ DONE"| FIN["🎉 완료 — CHANGELOG 기록"]
 ```
 
-| 단계 | 에이전트 | 하는 일 | 산출물 | 게이트 판정 |
+> 게이트 판정(APPROVE/PASS/DONE)은 게이트 에이전트가 아니라 **gate-judge**가 확정합니다.
+> 점검·검증·최종 테스트 에이전트는 증거를 모아 **권고**만 하고, 증거를 만든 자가
+> 스스로 채점하지 못하게 심판이 판정을 확정합니다.
+
+| 단계 | 에이전트 | 하는 일 | 산출물 | 게이트 판정(gate-judge 확정) |
 |---|---|---|---|---|
 | 1 계획 수립 | plan-writer | 무엇을 어떻게 만들지 계획 문서 작성 | `PLAN_<주제>.md` | — |
 | 2 계획 점검 | plan-reviewer | 계획의 결함을 비판적으로 검토 (Codex 병행) | `PLAN_<주제>_REVIEW.md` | APPROVE / REVISE |
 | 3 구현 | implementer | 승인된 계획대로만 코드 작성 | 코드 + CHANGELOG | — |
 | 4 구현 검증 | impl-verifier | 계획대로 됐는지 검증 + 테스트 직접 실행 (Codex 병행) | `PLAN_<주제>_VERIFY_<phase>.md` | PASS / FAIL |
 | 5 최종 테스트 | final-tester | 사용자 관점 실데이터 확인 (쓰기는 드라이런까지) | `PLAN_<주제>_FINAL_<phase>.md` | DONE / BLOCKED |
+
+이 5단계 외에 **gate-judge**(위 게이트들의 판정을 확정)와 **error-analyst**(테스트
+실패·운영 에러의 근본 원인 분석 → `FIX_<주제>.md`)가 있습니다. 에러 대응은 5단계와
+별개 경로입니다: error-analyst 분석 → implementer 수정 → 검증 → gate-judge 판정.
 
 작은 단건 수정(버그 픽스 등)은 5단계 대신 **구현 → 테스트 → 실데이터 확인** 경로를
 사용합니다 — 기준은 [docs/02_process.md](docs/02_process.md#5단계를-생략할-수-있는-경우) 참조.
@@ -166,10 +175,10 @@ flowchart LR
 
 | 문서 | 내용 | 대상 |
 |---|---|---|
-| [00_files.md](docs/00_files.md) | **파일별 상세 설명서** — 킷의 모든 파일(문서·템플릿·에이전트 5종)의 용도·내용·읽는 시점 | "이 파일 뭐지?" 싶을 때 |
+| [00_files.md](docs/00_files.md) | **파일별 상세 설명서** — 킷의 모든 파일(문서·템플릿·에이전트 7종)의 용도·내용·읽는 시점 | "이 파일 뭐지?" 싶을 때 |
 | [01_quickstart.md](docs/01_quickstart.md) | 복사 → 치환 → 첫 실행 | 처음 쓰는 사람 (필독) |
 | [02_process.md](docs/02_process.md) | 5단계 게이트 규칙·산출물 명명·생략 기준 | 모두 |
-| [03_agents.md](docs/03_agents.md) | 에이전트 5종 역할·호출법·모델 교체·**Codex 연동(기본 권장)과 미사용 폴백** | 모두 |
+| [03_agents.md](docs/03_agents.md) | 에이전트 7종 역할·호출법·모델 교체·**Codex 연동(기본 권장)과 미사용 폴백** | 모두 |
 | [04_rules.md](docs/04_rules.md) | 개발 규칙 — 설계 먼저, 실쓰기 금지선, CHANGELOG | 모두 (필독) |
 | [05_session.md](docs/05_session.md) | 세션 이어가기 — SESSION.md 체크포인트·재개 방법 | 모두 |
 | [06_cost.md](docs/06_cost.md) | 비용 통제 — 모델 티어 분배·CLAUDE.md 얇게·대화 습관 | 모두 |

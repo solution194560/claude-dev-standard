@@ -35,12 +35,16 @@ sequenceDiagram
 $KIT = "경로\claude-dev-standard"     # 이 킷의 위치
 $PROJ = "경로\my-project"             # 내 프로젝트
 
-Copy-Item "$KIT\templates\CLAUDE.md.template" "$PROJ\CLAUDE.md"
-Copy-Item "$KIT\templates\CHANGELOG.md.template" "$PROJ\CHANGELOG.md"
-Copy-Item "$KIT\templates\.gitignore.example" "$PROJ\.gitignore"   # 이미 있으면 내용만 합치세요
-New-Item -ItemType Directory -Force -Path "$PROJ\.claude" | Out-Null
-Copy-Item "$KIT\templates\.claude\*" "$PROJ\.claude" -Recurse -Force
-Rename-Item "$PROJ\.claude\settings.json.example" "settings.json"
+function Copy-IfMissing($src, $dst) {
+  if (Test-Path $dst) { Write-Host "건너뜀(이미 있음): $dst" } else { Copy-Item $src $dst }
+}
+Copy-IfMissing "$KIT\templates\CLAUDE.md.template"    "$PROJ\CLAUDE.md"
+Copy-IfMissing "$KIT\templates\CHANGELOG.md.template" "$PROJ\CHANGELOG.md"
+Copy-IfMissing "$KIT\templates\.gitignore.example"    "$PROJ\.gitignore"
+
+New-Item -ItemType Directory -Force -Path "$PROJ\.claude\agents" | Out-Null
+Copy-Item "$KIT\templates\.claude\agents\*" "$PROJ\.claude\agents" -Force
+Copy-IfMissing "$KIT\templates\.claude\settings.json.example" "$PROJ\.claude\settings.json"
 ```
 
 **bash (macOS/Linux):**
@@ -48,20 +52,23 @@ Rename-Item "$PROJ\.claude\settings.json.example" "settings.json"
 KIT=경로/claude-dev-standard
 PROJ=경로/my-project
 
-cp "$KIT/templates/CLAUDE.md.template" "$PROJ/CLAUDE.md"
-cp "$KIT/templates/CHANGELOG.md.template" "$PROJ/CHANGELOG.md"
-cp "$KIT/templates/.gitignore.example" "$PROJ/.gitignore"   # 이미 있으면 내용만 합치세요
-mkdir -p "$PROJ/.claude"
-cp -R "$KIT/templates/.claude/." "$PROJ/.claude/"
-mv "$PROJ/.claude/settings.json.example" "$PROJ/.claude/settings.json"
+# -n = 이미 있으면 덮어쓰지 않고 건너뜀
+cp -n "$KIT/templates/CLAUDE.md.template"    "$PROJ/CLAUDE.md"
+cp -n "$KIT/templates/CHANGELOG.md.template" "$PROJ/CHANGELOG.md"
+cp -n "$KIT/templates/.gitignore.example"    "$PROJ/.gitignore"
+
+mkdir -p "$PROJ/.claude/agents"
+cp -R "$KIT/templates/.claude/agents/." "$PROJ/.claude/agents/"
+cp -n "$KIT/templates/.claude/settings.json.example" "$PROJ/.claude/settings.json"
 ```
 
-`SESSION.md` 는 지금 만들 필요가 없습니다. 첫 중단 때 Claude 에게
-`"SESSION.md 에 체크포인트 남겨줘"` 라고 하면 [templates/SESSION.md.template](../templates/SESSION.md.template)
-형식으로 생성됩니다.
+> **기존 파일은 건드리지 않습니다.** `CLAUDE.md`·`CHANGELOG.md`·`.gitignore`·
+> `settings.json` 이 이미 있으면 건너뛰므로, 그 파일들은 템플릿을 열어 **필요한 부분만
+> 직접 합치세요.** 에이전트 7종은 덮어씁니다(수정 없이 쓰는 파일이므로 최신본이 맞습니다).
 
-> `.claude` 폴더가 **이미 있는** 프로젝트에도 안전합니다. 위 형태(`mkdir -p` +
-> `.claude/.` 복사)를 쓰지 않고 폴더 자체를 복사하면 `.claude/.claude` 로 중첩됩니다.
+`SESSION.md` 는 지금 만들 필요가 없습니다. 첫 중단 때 Claude 에게
+`"SESSION.md 에 체크포인트 남겨줘"` 라고 하면 `CLAUDE.md` §2 의 규칙대로 생성됩니다
+(형식 설명은 [05_session.md](05_session.md)).
 
 복사 후 내 프로젝트 구조:
 ```
@@ -71,12 +78,14 @@ my-project/
 ├── .gitignore             ← .env·settings.local.json 제외
 └── .claude/
     ├── settings.json      ← 권한 설정 (allow/deny)
-    └── agents/            ← 서브에이전트 5종 (수정 불필요)
+    └── agents/            ← 서브에이전트 7종 (수정 불필요)
         ├── plan-writer.md
         ├── plan-reviewer.md
         ├── implementer.md
         ├── impl-verifier.md
-        └── final-tester.md
+        ├── final-tester.md
+        ├── gate-judge.md
+        └── error-analyst.md
 ```
 
 ## ② CLAUDE.md 채우기 (가장 중요)
@@ -107,18 +116,24 @@ my-project/
 # 1단계: 계획
 "로그인 기능 개발 계획 세워줘"           → plan-writer가 PLAN_로그인.md 작성
 
-# 2단계: 점검
-"plan-reviewer로 PLAN_로그인.md 점검해줘" → APPROVE 나올 때까지 수정
+# 2단계: 점검 → 판정
+"plan-reviewer로 PLAN_로그인.md 점검해줘" → 결함·권고
+"gate-judge로 점검 판정 확정해줘"        → APPROVE 나올 때까지 수정
 
 # 3단계: 구현
 "PLAN_로그인.md Phase A 구현해줘"        → implementer가 코드 작성
 
-# 4단계: 검증
-"impl-verifier로 구현 검증해줘"          → PASS/FAIL 판정
+# 4단계: 검증 → 판정
+"impl-verifier로 구현 검증해줘"          → 테스트 실행·권고
+"gate-judge로 검증 판정 확정해줘"        → PASS/FAIL
 
-# 5단계: 최종 테스트
-"final-tester로 최종 테스트해줘"         → DONE이면 완료 🎉
+# 5단계: 최종 테스트 → 판정
+"final-tester로 최종 테스트해줘"         → 실데이터 e2e·권고
+"gate-judge로 최종 판정 확정해줘"        → DONE이면 완료 🎉
 ```
+
+> 게이트 에이전트(점검·검증·최종)는 **권고**만 하고, 판정은 **gate-judge**가
+> 확정합니다. 에러가 나면 `"이 에러 원인 분석해줘"`로 error-analyst를 부르세요.
 
 각 단계에서 무엇이 만들어지고 어떤 판정이 나와야 다음으로 가는지는
 [02_process.md](02_process.md)를 보세요.
