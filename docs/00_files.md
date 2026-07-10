@@ -221,7 +221,7 @@ CLAUDE.md §0 "위험 작업 목록"의 실쓰기 실행이다.
 
 | 항목 | 내용 |
 |---|---|
-| 모델 / 도구 | Sonnet / Read·Grep·Glob·Write·Bash (`Edit` 없음) |
+| 모델 / 도구 | Sonnet / Read·Grep·Glob·Write·Bash + `Edit`(CHANGELOG 갱신 전용) |
 | 산출물 | `<PLAN>_FINAL_<phase>.md` — **DONE / BLOCKED** |
 | 핵심 규칙 | **착수 조건: VERIFY가 PASS**. 사용자 관점 실데이터 e2e — 읽기 작업은 실제 실행, **쓰기 작업은 드라이런까지만**(드라이런 출력으로 쓰기 계획의 정확성 판정). e2e 스모크(회귀 테스트 + 실행 명령 소량 산출물 표본 검사). DONE 시 CHANGELOG 해당 기록에 "최종 테스트 통과(날짜)" 추가 |
 | 금지 | 소스 수정 (결함 발견 시 BLOCKED 보고), 실쓰기 실행 |

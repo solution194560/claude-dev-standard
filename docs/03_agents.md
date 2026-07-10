@@ -12,7 +12,7 @@
 | 2 | plan-reviewer | Opus | 계획 비판적 점검 | `*_REVIEW.md` (APPROVE/REVISE) | ❌ |
 | 3 | implementer | Sonnet | 계획대로 구현 | 코드 + CHANGELOG | ✅ |
 | 4 | impl-verifier | Opus | 구현 검증 + 테스트 직접 실행 | `*_VERIFY_*.md` (PASS/FAIL) | ❌ |
-| 5 | final-tester | Sonnet | 실데이터 e2e 최종 테스트 | `*_FINAL_*.md` (DONE/BLOCKED) | ❌ |
+| 5 | final-tester | Sonnet | 실데이터 e2e 최종 테스트 | `*_FINAL_*.md` (DONE/BLOCKED) | ❌ (CHANGELOG만) |
 
 > 역할 분리 원칙: **점검/검증/테스트 에이전트는 절대 소스를 고치지 않습니다.**
 > 결함은 보고만 하고, 수정은 항상 implementer가 합니다. (심판과 선수의 분리)
@@ -53,6 +53,8 @@ tools: Read, Grep, Glob, Write, Edit   # 허용 도구 (최소 권한)
 설계지만, **소스 수정을 도구 수준에서 막지는 못합니다** — `Write`는 파일을 통째로 덮어쓸 수
 있고 `Bash`가 있으면 `sed -i` 한 줄이면 됩니다. 소스 수정 금지는 결국 **지시문으로 지키는
 규칙**입니다. 임의로 `Edit`를 추가하지 마세요(방어가 한 겹 더 얇아집니다).
+예외는 final-tester 하나입니다 — DONE 판정 시 CHANGELOG.md 에 한 줄을 덧붙여야 하므로
+`Edit`를 갖되, 지시문에서 **CHANGELOG 전용**으로 못박았습니다.
 
 ## 외부 점검 도구 연동 (기본 권장) — Codex CLI
 
