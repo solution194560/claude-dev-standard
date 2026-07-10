@@ -1,0 +1,24 @@
+# 시크릿 — 절대 커밋하지 않는다 (04_rules.md 안전 금지선)
+.env
+.env.*
+!.env.example
+
+# 개인 전용 Claude 설정 (팀 공유는 .claude/settings.json)
+.claude/settings.local.json
+
+# 진행 중 세션 메모 — 개인 메모로 쓸 때만 주석 해제
+# 팀이 함께 보는 체크포인트로 쓰려면 커밋한다 (05_session.md)
+# SESSION.md
+
+# 로컬 산출물 — 프로젝트에 맞게 고칠 것
+results/
+*.log
+
+# 파이썬
+__pycache__/
+.venv/
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -36,6 +36,8 @@ $KIT = "경로\claude-dev-standard"     # 이 킷의 위치
 $PROJ = "경로\my-project"             # 내 프로젝트
 
 Copy-Item "$KIT\templates\CLAUDE.md.template" "$PROJ\CLAUDE.md"
+Copy-Item "$KIT\templates\CHANGELOG.md.template" "$PROJ\CHANGELOG.md"
+Copy-Item "$KIT\templates\.gitignore.example" "$PROJ\.gitignore"   # 이미 있으면 내용만 합치세요
 New-Item -ItemType Directory -Force -Path "$PROJ\.claude" | Out-Null
 Copy-Item "$KIT\templates\.claude\*" "$PROJ\.claude" -Recurse -Force
 Rename-Item "$PROJ\.claude\settings.json.example" "settings.json"
@@ -47,10 +49,16 @@ KIT=경로/claude-dev-standard
 PROJ=경로/my-project
 
 cp "$KIT/templates/CLAUDE.md.template" "$PROJ/CLAUDE.md"
+cp "$KIT/templates/CHANGELOG.md.template" "$PROJ/CHANGELOG.md"
+cp "$KIT/templates/.gitignore.example" "$PROJ/.gitignore"   # 이미 있으면 내용만 합치세요
 mkdir -p "$PROJ/.claude"
 cp -R "$KIT/templates/.claude/." "$PROJ/.claude/"
 mv "$PROJ/.claude/settings.json.example" "$PROJ/.claude/settings.json"
 ```
+
+`SESSION.md` 는 지금 만들 필요가 없습니다. 첫 중단 때 Claude 에게
+`"SESSION.md 에 체크포인트 남겨줘"` 라고 하면 [templates/SESSION.md.template](../templates/SESSION.md.template)
+형식으로 생성됩니다.
 
 > `.claude` 폴더가 **이미 있는** 프로젝트에도 안전합니다. 위 형태(`mkdir -p` +
 > `.claude/.` 복사)를 쓰지 않고 폴더 자체를 복사하면 `.claude/.claude` 로 중첩됩니다.
@@ -59,8 +67,10 @@ mv "$PROJ/.claude/settings.json.example" "$PROJ/.claude/settings.json"
 ```
 my-project/
 ├── CLAUDE.md              ← ②에서 채울 파일
+├── CHANGELOG.md           ← 작업 완료 시 맨 위에 기록
+├── .gitignore             ← .env·settings.local.json 제외
 └── .claude/
-    ├── settings.json      ← 권한 설정 (필요 시 수정)
+    ├── settings.json      ← 권한 설정 (allow/deny)
     └── agents/            ← 서브에이전트 5종 (수정 불필요)
         ├── plan-writer.md
         ├── plan-reviewer.md

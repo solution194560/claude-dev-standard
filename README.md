@@ -47,6 +47,9 @@ claude-dev-standard/               ← 이 킷 (원본은 그대로 둠)
 │
 └── templates/                     ← 📦 "부품" — 내 프로젝트로 복사할 파일들
     ├── CLAUDE.md.template             → 내 프로젝트의 CLAUDE.md 가 됨
+    ├── CHANGELOG.md.template          → 내 프로젝트의 CHANGELOG.md 가 됨
+    ├── SESSION.md.template            → 첫 중단 때 SESSION.md 로 생성됨
+    ├── .gitignore.example             → 내 프로젝트의 .gitignore 가 됨
     └── .claude/
         ├── settings.json.example      → .claude/settings.json 이 됨
         └── agents/                    → .claude/agents/ 로 그대로 복사
@@ -62,6 +65,8 @@ claude-dev-standard/               ← 이 킷 (원본은 그대로 둠)
 ```
 my-project/                        ← 내가 개발할 프로젝트
 ├── CLAUDE.md                      ← 복사 후 {{ }} 빈칸을 내 프로젝트 값으로 채움
+├── CHANGELOG.md                   ← 완료된 작업 기록 (최신이 맨 위)
+├── .gitignore
 ├── .claude/
 │   ├── settings.json              ← 도구 권한 설정 (기본값 그대로 가능)
 │   └── agents/  (5종)             ← 수정 없이 그대로 사용

@@ -16,6 +16,9 @@ claude-dev-standard/
 │   └── 06_cost.md             ← 비용 통제
 └── templates/                 ← 📦 내 프로젝트로 복사하는 곳
     ├── CLAUDE.md.template     ← → 내 프로젝트의 CLAUDE.md
+    ├── CHANGELOG.md.template  ← → 내 프로젝트의 CHANGELOG.md
+    ├── SESSION.md.template    ← → 첫 중단 때 SESSION.md
+    ├── .gitignore.example     ← → 내 프로젝트의 .gitignore
     └── .claude/
         ├── settings.json.example  ← → .claude/settings.json
         └── agents/                ← → 그대로 복사 (5종)
@@ -161,6 +164,33 @@ claude-dev-standard/
 - **§3 실행** — 실행/테스트 명령 (치환)
 - **§4 개발 프로세스** — 5단계 게이트 표 + 외부 점검 도구·실쓰기 금지·경량 경로 규칙
 - **§5 정책 요약** — 프로젝트 도메인 규칙 자리 (없으면 삭제)
+
+### CHANGELOG.md.template → 내 프로젝트의 `CHANGELOG.md`
+
+| 항목 | 내용 |
+|---|---|
+| 한 줄 | **완료된** 작업의 기록. 최신이 항상 맨 위 |
+| 손댈 곳 | 첫 기록을 쓸 때 예시 항목과 주석 블록 삭제 |
+
+한 항목의 형식은 무엇을/왜/어떻게/검증/관련 문서. implementer 가 Phase 완료 시 맨 위에
+추가하고, final-tester 가 DONE 판정 시 "최종 테스트 통과(날짜)" 한 줄을 덧붙인다.
+형식을 고정해 두는 이유는 프로젝트마다 다른 포맷이 생기는 것을 막기 위해서다.
+
+### SESSION.md.template → 첫 중단 때 `SESSION.md`
+
+| 항목 | 내용 |
+|---|---|
+| 한 줄 | **진행 중** 작업의 체크포인트. 완료되면 비우고 CHANGELOG 로 |
+| 손댈 곳 | 직접 만들 필요 없음 — "SESSION.md 에 체크포인트 남겨줘" 한 마디면 생성 |
+
+4항목(지금 하던 일 / 다음에 할 일 / 확정된 결정 / 재개 명령). 운용은 [05_session.md](05_session.md).
+
+### .gitignore.example → 내 프로젝트의 `.gitignore`
+
+시크릿(`.env`)과 개인 설정(`.claude/settings.local.json`)을 커밋에서 제외한다.
+`SESSION.md`는 팀 공유 여부에 따라 주석을 풀어 쓴다.
+**`.gitignore`가 아니라 `.gitignore.example`인 이유** — `templates/.gitignore`로 두면
+킷 저장소 자신의 git이 그 규칙을 적용해 버린다.
 
 ### .claude/settings.json.example → `.claude/settings.json`
 
