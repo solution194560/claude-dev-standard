@@ -4,6 +4,27 @@
 
 ---
 
+## 2026-07-11 — OS 호환성 잔여 작업 적용
+
+**무엇을** `OS호환성_잔여작업_지시서.md`의 잔여 3건 적용.
+
+**왜** 모델 세대교체 시 낡은 전체 ID가 남는 이식성 문제와 `python3`만 있는
+macOS/Linux 환경 대응.
+
+**어떻게**
+- `agents/*.md` 7종 frontmatter `model:`을 전체 ID → 별칭(`opus`/`sonnet`)으로 변경
+- `skills/gated-dev/references/agents.md`의 frontmatter 예시도 별칭으로 동기화(사본 규칙)
+- `templates/.claude/settings.json.example` allow에 `Bash(python3 -m pytest*)` 추가
+- `skills/gated-dev/references/quickstart.md` 사전 준비 절에 OS별 셸·venv 경로 표 추가
+
+**검증**
+- `grep -rn "model:" agents/` → 7줄 모두 `opus`/`sonnet` 확인
+- plugin.json·marketplace.json·settings.json.example JSON 유효성 통과
+
+**관련 문서** `OS호환성_잔여작업_지시서.md`
+
+---
+
 ## 2026-07-11 — Claude Code 플러그인 구조로 전면 재편
 
 **무엇을** 킷을 문서·템플릿 저장소에서 **Claude Code 플러그인**으로 재구성.

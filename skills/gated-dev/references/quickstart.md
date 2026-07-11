@@ -23,6 +23,11 @@ sequenceDiagram
 | 내 프로젝트 폴더 | 새 폴더도 가능 (git init 권장) |
 | (권장) 외부 점검 도구 | Codex CLI — 점검·검증 교차 검증의 기본 경로. 없어도 동작함(자동 폴백) ([agents.md](agents.md#외부-점검-도구-연동-기본-권장--codex-cli) 참조) |
 
+| 운영체제 | 권장 셸 | Python 가상환경 경로 |
+|---|---|---|
+| macOS / Linux / WSL | Bash/Zsh | `.venv/bin/python` |
+| Windows 네이티브 | Git Bash 또는 PowerShell | `.venv/Scripts/python.exe` |
+
 ## ① 플러그인 설치
 
 Claude Code에서 마켓플레이스를 추가하고 설치합니다.
