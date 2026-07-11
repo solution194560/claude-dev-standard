@@ -1,0 +1,24 @@
+{
+  "name": "claude-dev-standard",
+  "description": "5단계 게이트 개발 프로세스 — 계획·점검·구현·검증·최종 테스트를 전담 에이전트 7종으로 나누고, 증거 수집자와 판정자(gate-judge)를 분리해 자가 채점을 막는다. AI 코딩의 전형적 실패(계획 없이 구현, 자기 검증, 실수로 운영 반영, 기록 없음)를 프로세스로 차단하는 Claude Code 플러그인.",
+  "version": "1.0.0",
+  "author": {
+    "name": "solution194560",
+    "url": "https://github.com/solution194560"
+  },
+  "homepage": "https://github.com/solution194560/claude-dev-standard",
+  "repository": "https://github.com/solution194560/claude-dev-standard",
+  "license": "MIT",
+  "keywords": [
+    "gated-development",
+    "5-stage-gate",
+    "code-review",
+    "agent-team",
+    "cross-verification",
+    "gate-judge",
+    "plan-review",
+    "claude-code",
+    "claude-code-plugin"
+  ],
+  "skills": ["./skills/gated-dev"]
+}
