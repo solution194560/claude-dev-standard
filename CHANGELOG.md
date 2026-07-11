@@ -4,6 +4,36 @@
 
 ---
 
+## 2026-07-11 — Windows PowerShell 정식 지원 (B안)
+
+**무엇을** 재검증 보고서(`claude-dev-standard-업데이트-재검증-수정필요사항.md`)의
+P1 항목 적용 — 셸 실행이 필요한 에이전트에 PowerShell 도구 추가, deny 규칙 미러링.
+
+**왜** Quickstart는 Windows에서 "Git Bash 또는 PowerShell"을 안내하지만 에이전트
+도구 목록에는 `Bash`만 있어 문서와 실제 설정이 불일치했다. Claude Code는 Git Bash
+없는 네이티브 Windows에서 PowerShell 도구를 자동 사용하므로, 그 환경에서는 실행형
+에이전트가 셸을 아예 못 쓰는 상태였다.
+
+**어떻게**
+- `agents/` 5종(plan-reviewer·implementer·impl-verifier·final-tester·error-analyst)
+  frontmatter `tools:`에 `PowerShell` 추가 (plan-writer·gate-judge는 셸 불필요 — 제외)
+- `templates/.claude/settings.json.example` deny에 `PowerShell(*--apply*)`,
+  `PowerShell(*--no-dry-run*)`, `PowerShell(*--yes*)`, `PowerShell(git push*)` 추가
+- `skills/gated-dev/references/rules.md` deny 설명에 PowerShell 미러 규칙과
+  "셸 명령은 Bash·PowerShell 양쪽에 적는다" 안내 추가
+
+**검증**
+- plugin.json·marketplace.json·settings.json.example JSON 유효성 통과
+- `grep -n "^tools:" agents/*.md` → 실행형 5종에 PowerShell, 비실행형 2종 변경 없음
+- PowerShell 도구 실존·권한 규칙 문법은 공식 문서(tools-reference)로 확인
+
+**미적용(보류)** 같은 보고서의 P0 2건 — implementer·final-tester가 gate-judge의
+`_JUDGE.md` 판정 파일을 필수 확인하도록 하는 수정. 사용자 결정으로 보류.
+
+**관련 문서** `claude-dev-standard-업데이트-재검증-수정필요사항.md`(저장소 외부 보고서)
+
+---
+
 ## 2026-07-11 — OS 호환성 잔여 작업 적용
 
 **무엇을** `OS호환성_잔여작업_지시서.md`의 잔여 3건 적용.
