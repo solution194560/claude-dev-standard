@@ -4,10 +4,7 @@
       "Read(**)",
       "Grep(**)",
       "Glob(**)",
-      "Bash(python -m pytest*)",
-      "Bash(python3 -m pytest*)",
-      "Bash(.venv/bin/python -m pytest*)",
-      "Bash(.venv/Scripts/python.exe -m pytest*)",
+      "Bash(python3 -c \"import json*\")",
       "Bash(git status*)",
       "Bash(git diff*)",
       "Bash(git log*)"
