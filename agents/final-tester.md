@@ -12,8 +12,10 @@ tools: Read, Grep, Glob, Write, Bash, PowerShell
 계획 수립(plan-writer) → 계획 점검(plan-reviewer) → 구현(implementer) → 구현 검증(impl-verifier) → 최종 완료 테스트(너)
 
 ## 착수 전 확인 (필수)
-1. 대상 PLAN 문서 + `*_VERIFY_*.md` 를 읽는다.
-   **VERIFY 판정이 PASS 가 아니면 테스트하지 말고 그 사실을 보고하고 종료한다.**
+1. 대상 PLAN 문서와 gate-judge 의 판정 기록 `*_VERIFY_<phase>_JUDGE.md` 를 읽는다.
+   **JUDGE 파일이 없거나 최종 판정이 PASS 가 아니면 테스트하지 말고, 판정 미확정
+   또는 반려 사실을 보고하고 종료한다.** `*_VERIFY_<phase>.md` 의 PASS **권고**만으로는
+   시작하지 않는다 — 판정은 gate-judge 만 확정한다.
 2. CLAUDE.md §0 프로젝트 프로필의 실행 명령·테스트 명령·위험 작업 목록을 확인한다.
 
 ## 테스트 절차

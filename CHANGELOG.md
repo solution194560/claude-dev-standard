@@ -4,6 +4,29 @@
 
 ---
 
+## 2026-07-11 — 게이트 우회 차단: implementer·final-tester 착수 조건을 JUDGE 확정으로 변경
+
+**무엇을** 재검증 보고서의 P0 2건 적용 — 두 에이전트의 착수 조건을 게이트
+에이전트의 **권고 보고서**가 아니라 gate-judge의 **판정 기록(`_JUDGE.md`)** 확인으로 변경.
+
+**왜** 기존 착수 조건은 `*_REVIEW.md`(APPROVE 권고)·`*_VERIFY_*.md`(PASS 권고)만
+확인해서, gate-judge 판정 없이도 다음 단계에 진입할 수 있었다. "증거 수집자와
+판정자 분리"가 지시문 수준에서 우회 가능했던 구멍을 막는다.
+
+**어떻게**
+- `agents/implementer.md` 착수 조건 — `*_REVIEW_JUDGE.md` 필수 확인. JUDGE 파일이
+  없거나 APPROVE가 아니면 구현하지 않고 보고 후 종료. REVIEW 권고만으로 착수 금지.
+- `agents/final-tester.md` 착수 조건 — `*_VERIFY_<phase>_JUDGE.md` 필수 확인. 동일 원칙.
+- `skills/gated-dev/references/process.md` 3·5단계 착수 조건 설명을 동기화(사본 규칙).
+
+**검증**
+- plugin.json·marketplace.json·settings.json.example JSON 유효성 통과
+- 파일명 패턴이 gate-judge의 명명 규칙(`<입력보고서명>_JUDGE.md`)과 일치 확인
+
+**관련 문서** `claude-dev-standard-업데이트-재검증-수정필요사항.md`(저장소 외부 보고서)
+
+---
+
 ## 2026-07-11 — Windows PowerShell 정식 지원 (B안)
 
 **무엇을** 재검증 보고서(`claude-dev-standard-업데이트-재검증-수정필요사항.md`)의

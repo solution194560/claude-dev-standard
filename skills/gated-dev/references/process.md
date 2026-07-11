@@ -44,7 +44,9 @@ stateDiagram-v2
 - 외부 점검 도구(Codex 등)가 설정돼 있으면 그 결과가 판정 기준 ([agents.md](agents.md) 참조)
 
 ### 3️⃣ 구현 (implementer)
-- **착수 조건: REVIEW 판정이 APPROVE** — 아니면 구현하지 않고 보고 후 종료
+- **착수 조건: `_REVIEW_JUDGE.md`의 확정 판정이 APPROVE** (gate-judge 확정) —
+  JUDGE 파일이 없거나 APPROVE가 아니면 구현하지 않고 보고 후 종료.
+  REVIEW의 권고만으로는 착수하지 않음
 - 지시받은 Phase 범위만 구현 (다음 Phase 선행 금지)
 - 계획과 다르게 해야 할 사정이 생기면 임의 변경 금지 — 편차를 보고서에 명시,
   중대한 편차면 중단·보고
@@ -63,7 +65,9 @@ stateDiagram-v2
 - 검증자는 소스 수정 금지 — 결함은 보고만 (수정은 implementer의 몫)
 
 ### 5️⃣ 최종 테스트 (final-tester) — 게이트 ③
-- **착수 조건: VERIFY 판정이 PASS** (gate-judge 확정)
+- **착수 조건: `_VERIFY_<phase>_JUDGE.md`의 확정 판정이 PASS** (gate-judge 확정) —
+  JUDGE 파일이 없거나 PASS가 아니면 테스트하지 않고 보고 후 종료.
+  VERIFY의 권고만으로는 착수하지 않음
 - **산출물**: `PLAN_<주제>_FINAL_<phase>.md` / **권고: DONE 또는 BLOCKED** → gate-judge가
   `..._FINAL_<phase>_JUDGE.md`로 **판정 확정**
 - 사용자 관점의 실데이터 e2e: 읽기 작업은 실제 실행, **쓰기 작업은 드라이런까지만**

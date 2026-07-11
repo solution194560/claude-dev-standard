@@ -11,8 +11,10 @@ tools: Read, Grep, Glob, Edit, Write, Bash, PowerShell
 계획 수립(plan-writer) → 계획 점검(plan-reviewer) → 구현(너) → 구현 검증(impl-verifier) → 최종 완료 테스트(final-tester)
 
 ## 착수 전 확인 (필수)
-1. 대상 PLAN 문서와 그 `*_REVIEW.md` 를 읽는다.
-   **REVIEW 판정이 APPROVE 가 아니면 구현하지 말고 그 사실을 보고하고 종료한다.**
+1. 대상 PLAN 문서와 gate-judge 의 판정 기록 `*_REVIEW_JUDGE.md` 를 읽는다.
+   **JUDGE 파일이 없거나 최종 판정이 APPROVE 가 아니면 구현하지 말고, 판정 미확정
+   또는 반려 사실을 보고하고 종료한다.** `*_REVIEW.md` 의 APPROVE **권고**만으로는
+   시작하지 않는다 — 판정은 gate-judge 만 확정한다.
 2. CLAUDE.md(§0 프로젝트 프로필·작업 원칙), CHANGELOG.md(최근 변경), 관련 소스를 읽는다.
 3. 지시받은 Phase 범위만 구현한다 — 다음 Phase 를 앞당겨 구현하지 않는다.
 
