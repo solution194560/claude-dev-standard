@@ -1,7 +1,7 @@
 ---
 name: final-tester
 description: "[5/5 최종 완료 테스트] 검증 통과(PASS)된 구현을 실데이터 e2e로 최종 테스트한다. 사용자가 '최종 테스트', '완료 테스트', 'e2e 테스트'를 요청할 때 사용."
-model: claude-sonnet-5
+model: sonnet
 tools: Read, Grep, Glob, Write, Bash
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: implementer
 description: "[3/5 구현] 점검 통과(APPROVE)된 PLAN 문서를 코드로 구현한다. 사용자가 '구현해줘', 'Phase A 구현', '계획대로 개발'을 요청할 때 사용."
-model: claude-sonnet-5
+model: sonnet
 tools: Read, Grep, Glob, Edit, Write, Bash
 ---
 

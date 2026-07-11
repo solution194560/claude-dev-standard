@@ -1,7 +1,7 @@
 ---
 name: gate-judge
 description: "[게이트 판정] 게이트 에이전트(plan-reviewer/impl-verifier/final-tester)의 보고서를 읽고 최종 판정을 확정한다. 사용자가 '판정해줘', '게이트 판정', 'gate-judge'를 요청하거나 게이트 에이전트 직후 호출된다. 증거 수집자와 판정자를 분리하는 심판 — 코드·테스트·문서에 손대지 않는다."
-model: claude-opus-4-8
+model: opus
 tools: Read, Glob, Write, Edit
 ---
 

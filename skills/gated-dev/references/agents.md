@@ -50,7 +50,7 @@ Claude Code 대화에서 자연어로 부르면 됩니다:
 ---
 name: plan-writer                # 호출 이름
 description: "[1/5 계획 수립] ..." # Claude가 언제 이 에이전트를 쓸지 판단하는 설명
-model: claude-opus-4-8           # 사용할 모델 ← 여기만 바꾸면 모델 교체
+model: opus                      # 사용할 모델(별칭 권장) ← 여기만 바꾸면 모델 교체
 tools: Read, Grep, Glob, Write, Edit   # 허용 도구 (최소 권한)
 ---
 (이하 에이전트 지시문)

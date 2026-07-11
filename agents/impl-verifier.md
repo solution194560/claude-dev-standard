@@ -1,7 +1,7 @@
 ---
 name: impl-verifier
 description: "[4/5 구현 검증] 구현된 코드를 계획 대비 검증한다(외부 점검 도구 병행 가능). 사용자가 '구현 검증', '코드 검증해줘', '구현 리뷰'를 요청할 때 사용. 소스 수정 금지, 검증 보고서만 작성."
-model: claude-opus-4-8
+model: opus
 tools: Read, Grep, Glob, Write, Bash
 ---
 
