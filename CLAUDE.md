@@ -10,7 +10,7 @@
 | 실행 명령 | 없음 — 플러그인·문서 저장소 |
 | 테스트 명령 | `python3 -c "import json;json.load(open('.claude-plugin/plugin.json'));json.load(open('.claude-plugin/marketplace.json'));print('OK')"` · `bash ruler-test/check-sync.sh` (정본↔생성물 일치) |
 | 주요 산출물 경로 | `.claude-plugin/*.json`, `skills/**`, `agents/**`, `templates/**`, `README.md` |
-| 외부 점검 도구 | `codex exec -m gpt-5.5 --skip-git-repo-check -C . --sandbox read-only -` (지시문은 stdin 으로 전달) |
+| 외부 점검 도구 | `codex exec -m gpt-5.6-sol --skip-git-repo-check -C . --sandbox read-only -` (지시문은 stdin 으로 전달) |
 
 ### 위험 작업 목록 (에이전트 실행 금지 — 드라이런까지만)
 <!-- 공통 안전 규칙의 정본은 .ruler/10-safety.md(→ @RULER_CLAUDE.md 임포트)와
@@ -56,20 +56,20 @@ python3 -c "import json;json.load(open('templates/.claude/settings.json.example'
 | 단계 | 에이전트 | 모델 (외부 검증) | 산출물(게이트) |
 |---|---|---|---|
 | 1 계획 수립 | plan-writer | Fable 5 | PLAN_<주제>.md |
-| 2 계획 점검 | plan-reviewer | Sonnet 5 (+GPT-5.5) | *_REVIEW.md — APPROVE/REVISE **권고** |
+| 2 계획 점검 | plan-reviewer | Sonnet 5 (+GPT-5.6-sol) | *_REVIEW.md — APPROVE/REVISE **권고** |
 | 3 구현 | implementer | Sonnet 5 | 코드 + CHANGELOG (Phase 단위) |
-| 4 구현 검증 | impl-verifier | Sonnet 5 (+GPT-5.5) | *_VERIFY_*.md — PASS/FAIL **권고** |
+| 4 구현 검증 | impl-verifier | Sonnet 5 (+GPT-5.6-sol) | *_VERIFY_*.md — PASS/FAIL **권고** |
 | 5 최종 테스트 | final-tester | Sonnet 5 | *_FINAL_*.md — DONE/BLOCKED **권고** |
 | 판정 | gate-judge | Opus 4.8 | *_JUDGE.md — 위 게이트(2·4·5)의 판정 **확정** |
 | 에러 대응 | error-analyst | Opus 4.8 | FIX_<주제>.md |
 
 > 모델 열은 각 에이전트 frontmatter 의 `model:` 이 정본이다(바꾸면 여기도 갱신).
-> `(+GPT-5.5)` 는 §0 "외부 점검 도구"(Codex)로 하는 교차 검증 모델이다.
+> `(+GPT-5.6-sol)` 는 §0 "외부 점검 도구"(Codex)로 하는 교차 검증 모델이다.
 > 게이트 판정·증거·공통 안전 규칙은 공통 규칙(`@RULER_CLAUDE.md`, 정본 `.ruler/`)을 따른다.
 
 - **단계별 모델·토큰 표기(세션이 담당)**: 세션(오케스트레이터)은 각 단계의 서브에이전트를
   호출하기 **직전에** 그 단계 모델을 한 줄로 코멘트한다 — 예: `▶ [4단계 구현 검증]
-  impl-verifier · Sonnet 5, 외부 검증 GPT-5.5(Codex)`. 호출이 **끝나면** 하네스가
+  impl-verifier · Sonnet 5, 외부 검증 GPT-5.6-sol(Codex)`. 호출이 **끝나면** 하네스가
   반환한 서브에이전트 토큰을 `⏱ 4단계 토큰: N` 으로 보고하고, 외부 점검 도구를 쓴
   단계(2·4)는 codex 응답의 `tokens used` 값도 함께 적는다. **서브에이전트는 자기 토큰을
   스스로 세지 못하므로** 이 코멘트·집계는 반드시 세션이 한다(에이전트에게 위임 금지).

@@ -130,14 +130,14 @@ Windows에서 Codex가 무응답이면 항상 이 값부터 확인하세요.
 macOS / Linux (`codex`가 PATH에 없으면 그 자리에 절대경로를 넣으세요):
 ```bash
 cat "<지시문파일>" |
-  codex exec --skip-git-repo-check -C "<프로젝트 루트>" --sandbox read-only -
+  codex exec -m gpt-5.6-sol --skip-git-repo-check -C "<프로젝트 루트>" --sandbox read-only -
 ```
 
 Windows (PowerShell):
 ```powershell
 Get-Content <지시문파일> -Raw -Encoding UTF8 |
   & "$env:LOCALAPPDATA\Programs\OpenAI\Codex\bin\codex.exe" exec `
-    --skip-git-repo-check -C "<프로젝트 루트>" --sandbox read-only -
+    -m gpt-5.6-sol --skip-git-repo-check -C "<프로젝트 루트>" --sandbox read-only -
 ```
 
 여기까지 하면 끝 — 이후에는 평소처럼 `"plan-reviewer로 점검해줘"` /

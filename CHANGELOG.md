@@ -4,6 +4,22 @@
 
 ---
 
+## 2026-07-12 — Codex 교차검증 모델 gpt-5.6-sol 로 변경
+
+**무엇을** 외부 점검 도구(Codex) 모델을 `gpt-5.5` → `gpt-5.6-sol` 로 교체. `gpt-5.6`(하이픈
+없는 버전)은 계정에서 미지원 확인, `gpt-5.6-sol` 은 실행 테스트로 정상 응답 확인 후 적용.
+
+**어떻게** `gpt-5.5`/`GPT-5.5` 표기 9곳 전수 갱신 — CLAUDE.md §0 실행 커맨드·§4 표 2곳·
+모델 표기 예시 문단(5곳) + README.md 표 2곳 + SKILL.md 예시 1곳. 추가로
+references/agents.md 의 Codex 연동 설정 가이드(macOS/Windows 커맨드 예시)에는 기존에
+`-m` 플래그 자체가 없던 것을 발견해 `-m gpt-5.6-sol` 신규 추가(2곳).
+
+**검증** `codex exec -m gpt-5.6-sol --skip-git-repo-check -C . --sandbox read-only -` 를
+CLAUDE.md 에 기재된 형태 그대로 실행해 정상 응답 확인(원시 출력 첨부 없이 세션 인라인 확인 —
+경량 경로).
+
+---
+
 ## 2026-07-12 — 구현 검증도 Sonnet 으로 (교차검증 두 단계 통일)
 
 **무엇을** 구현 검증(impl-verifier): Opus → **Sonnet 5** (Codex 교차검증 유지). 앞선 점검 조정에
