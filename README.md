@@ -52,10 +52,10 @@ flowchart TD
 
 | 단계 | 에이전트 | 모델(외부 검증) | 판정 |
 |---|---|---|---|
-| 1 계획 수립 | plan-writer | Opus | — |
-| 2 계획 점검 | plan-reviewer | Opus (+GPT-5.6-sol) | APPROVE/REVISE |
+| 1 계획 수립 | plan-writer | Fable | — |
+| 2 계획 점검 | plan-reviewer | Sonnet (+GPT-5.6-sol) | APPROVE/REVISE |
 | 3 구현 | implementer | Sonnet | — |
-| 4 구현 검증 | impl-verifier | Opus (+GPT-5.6-sol) | PASS/FAIL |
+| 4 구현 검증 | impl-verifier | Sonnet (+GPT-5.6-sol) | PASS/FAIL |
 | 5 최종 테스트 | final-tester | Sonnet | DONE/BLOCKED |
 | 판정 확정 | gate-judge | Opus | 위 게이트(2·4·5)의 판정 확정 |
 | 에러 대응 | error-analyst | Opus | 근본 원인 분석(5단계와 별개) |
