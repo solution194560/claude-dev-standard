@@ -19,8 +19,10 @@
 존재, check-sync exit 0, 생성물 git 추적, JSON·`bash -n` OK, `agents/`·`skills/`·`templates/`·
 `.gitignore` 무변경. 삭제 3건의 대응 의미가 생성물(정본 `.ruler/`)에 보존됨을 확인(의미 대조).
 
-**남은 실데이터 검증** R3(새 Claude Code 세션에서 `@RULER_CLAUDE.md` 임포트 실제 로드 확인 —
-사람), R4(Codex 가 AGENTS.md 안전룰 인식 — 선택). R2 반복성은 apply 재실행 시 `git diff` 0 으로 확인.
+**실데이터 검증 완결(2026-07-12)** R1(사람 apply)·R2(반복성)·R3(새 세션 임포트 실로드 —
+출처까지 식별)·R4(Codex 안전룰 인식) 전부 통과. 증거는
+[RULER_MIGRATION_RESULT.md](RULER_MIGRATION_RESULT.md). **정본 이관 완결** — `.ruler/` 가 공통
+규칙 단일 정본, CLAUDE.md 중복 3건 제거·임포트 실로드 확정, 기존 플러그인 무손상.
 
 ---
 
