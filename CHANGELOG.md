@@ -21,15 +21,15 @@
 
 **실데이터 검증 완결(2026-07-12)** R1(사람 apply)·R2(반복성)·R3(새 세션 임포트 실로드 —
 출처까지 식별)·R4(Codex 안전룰 인식) 전부 통과. 증거는
-[RULER_MIGRATION_RESULT.md](RULER_MIGRATION_RESULT.md). **정본 이관 완결** — `.ruler/` 가 공통
+RULER_MIGRATION_RESULT.md. **정본 이관 완결** — `.ruler/` 가 공통
 규칙 단일 정본, CLAUDE.md 중복 3건 제거·임포트 실로드 확정, 기존 플러그인 무손상.
 
 ---
 
 ## 2026-07-12 — Ruler 정본 이관 Phase 1 (정본·도구 준비, 경량 경로)
 
-**무엇을** [PLAN_RULER_MIGRATION.md](PLAN_RULER_MIGRATION.md) 계획 점검 APPROVE 확정
-([PLAN_RULER_MIGRATION_REVIEW_JUDGE.md](PLAN_RULER_MIGRATION_REVIEW_JUDGE.md) 3차) 후 Phase 1 구현.
+**무엇을** PLAN_RULER_MIGRATION.md 계획 점검 APPROVE 확정
+(PLAN_RULER_MIGRATION_REVIEW_JUDGE.md 3차) 후 Phase 1 구현.
 - `.ruler/ruler.toml` — `[gitignore] enabled=false`·`[backup] enabled=false` 로 전환(생성물 커밋
   A안과의 충돌 제거, `.bak` 노이즈 제거). `apply --help` 로 `--no-gitignore`·`--no-backup`
   플래그 실재 확정(yargs boolean 부정).
@@ -55,34 +55,34 @@
 
 **무엇을** 1차 테스트 FINAL DONE 후속 — CLAUDE.md 공통 규칙을 `.ruler/` 정본으로 일원화
 (슬림화 + `@RULER_CLAUDE.md` 임포트)하고 생성물을 커밋 전환(A안, 사람 apply)하는 계획 문서
-[PLAN_RULER_MIGRATION.md](PLAN_RULER_MIGRATION.md) 작성 (5단계 게이트 1단계 산출물).
+PLAN_RULER_MIGRATION.md 작성 (5단계 게이트 1단계 산출물).
 1차 점검 REVISE → 수정 요구 6건 반영 2차 개정, 2차 재점검도 REVISE 확정
-([PLAN_RULER_MIGRATION_REVIEW_JUDGE.md](PLAN_RULER_MIGRATION_REVIEW_JUDGE.md), 1차 요구 5건
+(PLAN_RULER_MIGRATION_REVIEW_JUDGE.md, 1차 요구 5건
 해소·1건 부분해소)되어 잔존 2건을 반영해 **3차 개정** — §3.1 O3 키 문구를 CLAUDE.md raw
 원문(`**권고**만 하며`, 볼드 마커 포함)과 일치하도록 정정하고 O3(i) 를 `grep -F` 로 명시(A),
 §3.5 사람 apply 명령에 `--no-backup` 추가해 스크립트와 플래그 통일(B).
 
 **상태** 계획 단계 — 구현 금지. 3차 개정본으로 plan-reviewer 재점검 + gate-judge 재판정 대기.
 
-**관련 문서** [PLAN_RULER.md](PLAN_RULER.md)·[RULER_TEST_RESULT.md](RULER_TEST_RESULT.md)·
-[PLAN_RULER_FINAL_2bc_JUDGE.md](PLAN_RULER_FINAL_2bc_JUDGE.md)(선행 DONE 판정)·
-[PLAN_RULER_MIGRATION_REVIEW.md](PLAN_RULER_MIGRATION_REVIEW.md)(2차 점검 보고서)
+**관련 문서** PLAN_RULER.md·RULER_TEST_RESULT.md·
+PLAN_RULER_FINAL_2bc_JUDGE.md(선행 DONE 판정)·
+PLAN_RULER_MIGRATION_REVIEW.md(2차 점검 보고서)
 
 ---
 
 ## 2026-07-12 — [구현 3단계] Ruler 규칙 배포 변환 계층 Phase 1·2a 구현 (implementer)
 
-**최종 테스트 통과(2026-07-12)** — gate-judge DONE 확정([PLAN_RULER_FINAL_2bc_JUDGE.md](PLAN_RULER_FINAL_2bc_JUDGE.md), 시나리오 15/15 PASS·수용 기준 8/8 충족).
+**최종 테스트 통과(2026-07-12)** — gate-judge DONE 확정(PLAN_RULER_FINAL_2bc_JUDGE.md, 시나리오 15/15 PASS·수용 기준 8/8 충족).
 
-**수정 회차(같은 날)** 구현 검증 게이트 FAIL 확정([PLAN_RULER_VERIFY_P1-2a_JUDGE.md](PLAN_RULER_VERIFY_P1-2a_JUDGE.md))
+**수정 회차(같은 날)** 구현 검증 게이트 FAIL 확정(PLAN_RULER_VERIFY_P1-2a_JUDGE.md)
 반려 → 확인 결함 2건을 `ruler-test/run-ruler-test.sh` 에서만 수정. ① P0 — 시나리오 0 판정
 diff 종료코드를 캡처해 재흡수 확인 시 "도입 보류" 기록(diff 원문·head -30 실측 보존, 가변
 메타데이터 가능성 명기 — Phase 2c 정규화 재판정용) 후 이후 시나리오 미진행 exit 1, 통과
 시에만 진행. ② P2 — 시나리오 9 deny grep 을 4패턴(`--apply`·`--yes`·`--no-dry-run`·
 `git push`)으로 완성. `bash -n`·§0 테스트 명령 PASS 재확인, 타 파일 무수정.
 
-**무엇을** [PLAN_RULER.md](PLAN_RULER.md)(4차 개정본, gate-judge 4차 APPROVE 통과 조건부 —
-[PLAN_RULER_REVIEW_JUDGE.md](PLAN_RULER_REVIEW_JUDGE.md)) 의 Phase 1 전체 + Phase 2a(스크립트
+**무엇을** PLAN_RULER.md(4차 개정본, gate-judge 4차 APPROVE 통과 조건부 —
+PLAN_RULER_REVIEW_JUDGE.md) 의 Phase 1 전체 + Phase 2a(스크립트
 작성) 구현. Phase 2b(사람 실행)·2c(로그 분석)·Phase 3(본 저장소 반영)은 이번 범위 밖 —
 **Phase 2b 사람 실행 대기** 상태로 종료.
 
@@ -132,15 +132,15 @@ diff 종료코드를 캡처해 재흡수 확인 시 "도입 보류" 기록(diff 
    반영됐는지, 위 "계획 대비 편차" 문단의 논리가 타당한지.
 4. `git push`·원격 반영·`[y/N]` 자동 응답이 스크립트에 없는지.
 
-**관련 문서** [PLAN_RULER.md](PLAN_RULER.md), [PLAN_RULER_REVIEW_JUDGE.md](PLAN_RULER_REVIEW_JUDGE.md)
+**관련 문서** PLAN_RULER.md, PLAN_RULER_REVIEW_JUDGE.md
 
 ---
 
 ## 2026-07-12 — [계획 단계] Ruler 규칙 배포 변환 계층 1차 테스트 계획 작성·개정(4차)
 
 **무엇을** Ruler(`@intellectronica/ruler`)를 규칙 배포 변환 계층으로 제한 적용하는
-1차 테스트 계획 문서 [PLAN_RULER.md](PLAN_RULER.md) 작성 (5단계 게이트 1단계 산출물).
-1~3차 계획 점검이 모두 REVISE 확정([PLAN_RULER_REVIEW_JUDGE.md](PLAN_RULER_REVIEW_JUDGE.md))
+1차 테스트 계획 문서 PLAN_RULER.md 작성 (5단계 게이트 1단계 산출물).
+1~3차 계획 점검이 모두 REVISE 확정(PLAN_RULER_REVIEW_JUDGE.md)
 — 2차 개정(수정 요구 7건), 3차 개정(사람 수동 실행 전환 등 6건)에 이어, 3차 점검(2차 요구
 5건 해소·1건 부분해소로 계획 골격 성립)의 신규 결함 4건을 반영해 **4차 개정** — 스크립트
 로그 경로 본 저장소 절대경로 고정(P0-A), 시나리오 8·14 절차 본문 확정(P1-B), 시나리오 5
@@ -152,8 +152,8 @@ Codex 확인 명령 수준 구체화(P1-C), 실패·재실행 규칙 신설(P2-D
 
 **상태** 계획 단계 — 구현 금지. 4차 개정본으로 plan-reviewer 재점검 + gate-judge 재판정 대기.
 
-**관련 문서** [Ruler-적용-테스트-설계.md](Ruler-적용-테스트-설계.md)(상위 설계),
-[PLAN_RULER_REVIEW.md](PLAN_RULER_REVIEW.md)(3차 점검 보고서)
+**관련 문서** Ruler-적용-테스트-설계.md(상위 설계),
+PLAN_RULER_REVIEW.md(3차 점검 보고서)
 
 ---
 

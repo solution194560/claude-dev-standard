@@ -122,8 +122,8 @@ bash ruler-test/check-sync.sh   # 정본↔생성물 일치(exit 0) 확인
 # .ruler/ 원본 + 생성물 2개를 같은 커밋으로 커밋
 ```
 
-1차 도입(5단계 게이트, 시나리오 15/15)과 정본 이관(오프라인 8건·실데이터 4건)의 검증 결과는
-[RULER_TEST_RESULT.md](RULER_TEST_RESULT.md)·[RULER_MIGRATION_RESULT.md](RULER_MIGRATION_RESULT.md) 참조.
+1차 도입은 5단계 게이트로 시나리오 15/15를, 정본 이관은 오프라인 8건·실데이터 4건 검증을
+통과했습니다. 진행 과정과 게이트 판정 기록은 git 커밋 히스토리에 남아 있습니다.
 
 ## 라이선스
 
