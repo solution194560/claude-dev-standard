@@ -89,7 +89,7 @@ run_fatal "고정 버전 실물 검증 (P1-6)" npx "@intellectronica/ruler@$RULE
 log_line ""
 log_line "########## 시나리오 1: dry-run ##########"
 run_step "dry-run 전 워킹트리 상태" git status --porcelain
-run_fatal "dry-run 적용" $RULER apply --agents claude,codex --no-mcp --no-skills --dry-run --verbose
+run_fatal "dry-run 적용" $RULER apply --agents claude,codex --no-mcp --no-skills --no-backup --no-gitignore --dry-run --verbose
 run_step "시나리오 1 판정 — dry-run 후 워킹트리 변경 (빈 출력 기대)" git status --porcelain
 
 # ── 시나리오 0 — 자기 출력 재흡수 선행 검증 (최우선, P0-3 승격) ────────────
@@ -98,7 +98,7 @@ log_line "########## 시나리오 0: 자기 출력 재흡수 선행 검증 #####
 SNAP="${TMPDIR:-/tmp}/ruler-test-snap-$(date +%s)"
 mkdir -p "$SNAP"
 
-run_fatal "1회차 apply" $RULER apply --agents claude,codex --no-mcp --no-skills --backup --gitignore --verbose
+run_fatal "1회차 apply" $RULER apply --agents claude,codex --no-mcp --no-skills --no-backup --no-gitignore --verbose
 run_fatal "1회차 산출물 스냅샷 저장 (AGENTS.md)" cp AGENTS.md "$SNAP/AGENTS.1.md"
 run_fatal "1회차 산출물 스냅샷 저장 (RULER_CLAUDE.md)" cp RULER_CLAUDE.md "$SNAP/RULER_CLAUDE.1.md"
 
@@ -106,7 +106,7 @@ run_fatal "1회차 산출물 스냅샷 저장 (RULER_CLAUDE.md)" cp RULER_CLAUDE
 # 남기고, 실제 정규화 필터링 여부·패턴 확정은 이 로그를 보는 Phase 2c 분석 단계에서 한다)
 run_step "1회차 산출물 헤더 30줄 확인 (가변 메타데이터 실측용)" head -30 AGENTS.md RULER_CLAUDE.md
 
-run_fatal "2회차 apply (자기 재흡수 실측)" $RULER apply --agents claude,codex --no-mcp --no-skills --backup --gitignore --verbose
+run_fatal "2회차 apply (자기 재흡수 실측)" $RULER apply --agents claude,codex --no-mcp --no-skills --no-backup --no-gitignore --verbose
 
 run_step "시나리오 0 판정 — AGENTS.md 1회차 vs 2회차 diff (차이 없음 기대)" diff "$SNAP/AGENTS.1.md" AGENTS.md
 S0_AGENTS_EC=$?
@@ -145,10 +145,10 @@ log_line "+ pwd (fresh clone 이후): $(pwd)"
 log_line ""
 log_line "########## 본 시험: 본 apply ##########"
 run_step "본 apply 전 워킹트리 상태" git status --porcelain
-run_fatal "본 apply 실행 (백업·gitignore 자동, MCP·스킬 비활성)" $RULER apply --agents claude,codex --no-mcp --no-skills --backup --gitignore --verbose
+run_fatal "본 apply 실행 (backup·gitignore 비활성, MCP·스킬 비활성)" $RULER apply --agents claude,codex --no-mcp --no-skills --no-backup --no-gitignore --verbose
 
 log_line ""
-log_line "--- 시나리오 2: 대상 제한 (기대 diff = RULER_CLAUDE.md·AGENTS.md 생성 + .gitignore 블록 변경만, P1-4') ---"
+log_line "--- 시나리오 2: 대상 제한 (기대 diff = RULER_CLAUDE.md·AGENTS.md 생성 2건만, .gitignore 무변경 — gitignore 비활성) ---"
 run_step "apply 후 생성 파일 확인" ls -la RULER_CLAUDE.md AGENTS.md
 run_step "시나리오 2 판정 — apply 후 워킹트리 변경 목록" git status --porcelain
 
@@ -187,13 +187,17 @@ run_step "한글 파일명 존재·인코딩 오류 없음 확인" ls -la "Ruler
 log_line ""
 log_line "########## 시나리오 11: revert ##########"
 run_fatal "revert 실행" $RULER revert --verbose
-run_step "시나리오 11 판정 — revert 후 워킹트리 상태 (apply 이전 상태로 복원 기대, .gitignore 블록 원복 포함, P1-4')" git status --porcelain
+run_step "시나리오 11 판정 — revert 후 워킹트리 상태 (apply 이전 상태로 복원 기대, gitignore 비활성이라 .gitignore 무변경)" git status --porcelain
+# 후속 ① (VERIFY DONE 조건): 1차 회차에서 revert 직후 .gitignore 에 ` M` 잔류가 관찰됐으나
+# git diff 원문이 없어 실체 미확정이었다. gitignore 비활성 전환 후에는 블록 자체를 만들지
+# 않으므로 이 diff 는 빈 출력이어야 한다 — 잔류 여부를 원문으로 확정하기 위해 캡처한다.
+run_step "시나리오 11 판정 — revert 직후 .gitignore diff 원문 (빈 출력 기대 — 후속 ①)" git diff -- .gitignore
 run_step "시나리오 11 판정 — 생성물 제거 확인 (두 파일 모두 없어야 함)" ls -la RULER_CLAUDE.md AGENTS.md
 
 # ── 시나리오 12 — revert 후 재적용 ──────────────────────────────────────
 log_line ""
 log_line "########## 시나리오 12: revert 후 재적용 ##########"
-run_fatal "재적용 (revert 후 재 apply)" $RULER apply --agents claude,codex --no-mcp --no-skills --backup --gitignore --verbose
+run_fatal "재적용 (revert 후 재 apply)" $RULER apply --agents claude,codex --no-mcp --no-skills --no-backup --no-gitignore --verbose
 run_step "시나리오 12 판정 — 시나리오 0 1회차 스냅샷과 재적용 결과 diff (AGENTS.md, 동일 결과 기대)" diff "$SNAP/AGENTS.1.md" AGENTS.md
 run_step "시나리오 12 판정 — 시나리오 0 1회차 스냅샷과 재적용 결과 diff (RULER_CLAUDE.md, 동일 결과 기대)" diff "$SNAP/RULER_CLAUDE.1.md" RULER_CLAUDE.md
 

@@ -4,6 +4,50 @@
 
 ---
 
+## 2026-07-12 — Ruler 정본 이관 Phase 1 (정본·도구 준비, 경량 경로)
+
+**무엇을** [PLAN_RULER_MIGRATION.md](PLAN_RULER_MIGRATION.md) 계획 점검 APPROVE 확정
+([PLAN_RULER_MIGRATION_REVIEW_JUDGE.md](PLAN_RULER_MIGRATION_REVIEW_JUDGE.md) 3차) 후 Phase 1 구현.
+- `.ruler/ruler.toml` — `[gitignore] enabled=false`·`[backup] enabled=false` 로 전환(생성물 커밋
+  A안과의 충돌 제거, `.bak` 노이즈 제거). `apply --help` 로 `--no-gitignore`·`--no-backup`
+  플래그 실재 확정(yargs boolean 부정).
+- `.ruler/00-overview.md` — "생성물 운영(정본 이관 후)" 절 추가(사람 재생성 절차·`.codex/config.toml`
+  미생성 실측 문서화 — VERIFY DONE 후속 ②).
+- `ruler-test/check-sync.sh` — 신규. 정본(`.ruler/*.md`)과 생성물(RULER_CLAUDE.md·AGENTS.md)의
+  내용 일치를 대조하는 읽기 전용 스크립트(Ruler 미실행, 에이전트·CI 실행 가능). 주석·빈 줄
+  정규화로 대조. 생성물 부재 시 exit 2.
+- `ruler-test/run-ruler-test.sh` — apply 명령 4곳 + dry-run 을 `--no-backup --no-gitignore` 로
+  교체([A-1]), revert 직후 `git diff -- .gitignore` 캡처 스텝 추가(후속 ①), 시나리오 2·11
+  기대값을 새 정책 기준으로 갱신.
+
+**검증(오프라인)** `bash -n` 두 스크립트 OK, toml 파싱 OK(gitignore=false·backup=false),
+§0 JSON 검증 OK, apply 명령에 비부정 `--backup`/`--gitignore` 잔존 없음, check-sync 생성물
+부재 시 exit 2. `CLAUDE.md`·`agents/`·`skills/`·`templates/` 무변경 확인.
+
+**다음** Phase 2 — 사람이 본 저장소에서 `ruler apply` 실행(§3.5) → 생성물 2개 커밋 → check-sync
+일치 확인. 이후 Phase 3 에서 CLAUDE.md 슬림화 + 임포트 추가.
+
+---
+
+## 2026-07-12 — [계획 단계] Ruler 정본 이관 계획 작성·개정(3차)
+
+**무엇을** 1차 테스트 FINAL DONE 후속 — CLAUDE.md 공통 규칙을 `.ruler/` 정본으로 일원화
+(슬림화 + `@RULER_CLAUDE.md` 임포트)하고 생성물을 커밋 전환(A안, 사람 apply)하는 계획 문서
+[PLAN_RULER_MIGRATION.md](PLAN_RULER_MIGRATION.md) 작성 (5단계 게이트 1단계 산출물).
+1차 점검 REVISE → 수정 요구 6건 반영 2차 개정, 2차 재점검도 REVISE 확정
+([PLAN_RULER_MIGRATION_REVIEW_JUDGE.md](PLAN_RULER_MIGRATION_REVIEW_JUDGE.md), 1차 요구 5건
+해소·1건 부분해소)되어 잔존 2건을 반영해 **3차 개정** — §3.1 O3 키 문구를 CLAUDE.md raw
+원문(`**권고**만 하며`, 볼드 마커 포함)과 일치하도록 정정하고 O3(i) 를 `grep -F` 로 명시(A),
+§3.5 사람 apply 명령에 `--no-backup` 추가해 스크립트와 플래그 통일(B).
+
+**상태** 계획 단계 — 구현 금지. 3차 개정본으로 plan-reviewer 재점검 + gate-judge 재판정 대기.
+
+**관련 문서** [PLAN_RULER.md](PLAN_RULER.md)·[RULER_TEST_RESULT.md](RULER_TEST_RESULT.md)·
+[PLAN_RULER_FINAL_2bc_JUDGE.md](PLAN_RULER_FINAL_2bc_JUDGE.md)(선행 DONE 판정)·
+[PLAN_RULER_MIGRATION_REVIEW.md](PLAN_RULER_MIGRATION_REVIEW.md)(2차 점검 보고서)
+
+---
+
 ## 2026-07-12 — [구현 3단계] Ruler 규칙 배포 변환 계층 Phase 1·2a 구현 (implementer)
 
 **최종 테스트 통과(2026-07-12)** — gate-judge DONE 확정([PLAN_RULER_FINAL_2bc_JUDGE.md](PLAN_RULER_FINAL_2bc_JUDGE.md), 시나리오 15/15 PASS·수용 기준 8/8 충족).

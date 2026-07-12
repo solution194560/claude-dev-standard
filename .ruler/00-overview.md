@@ -14,3 +14,9 @@ RULER_CLAUDE.md·AGENTS.md 는 **생성물(직접 수정 금지)** 이다.
 - 5단계 상세 실행: skills/gated-dev 가 정본.
 - 게이트 판정 로직: agents/gate-judge.md 가 정본.
 - 공통 안전·프로세스·증거 규칙: 이 `.ruler/` 가 정본이며 대상별 파일로 배포된다.
+
+## 생성물 운영 (정본 이관 후)
+- RULER_CLAUDE.md·AGENTS.md 는 본 저장소에 커밋한다. `.ruler/` 수정 시 사람이 dry-run →
+  apply → git diff 확인 → 재생성물 포함 커밋 순으로 갱신한다(에이전트는 apply 실행 금지).
+- MCP 비활성 상태에서 codex 어댑터는 `.codex/config.toml` 을 출력 경로로 선언만 하고
+  실물은 생성하지 않는다(1차 테스트 실측).
