@@ -13,10 +13,12 @@
 | 외부 점검 도구 | `codex exec -m gpt-5.5 --skip-git-repo-check -C . --sandbox read-only -` (지시문은 stdin 으로 전달) |
 
 ### 위험 작업 목록 (에이전트 실행 금지 — 드라이런까지만)
-<!-- 여기에 명령을 추가할 때마다 .claude/settings.json 의 "deny" 에도 같은 명령을 추가할 것.
-     이 목록은 지시문이고 deny 는 강제다. 둘이 어긋나면 지시문만 남는다. -->
-> 공통 안전 규칙은 임포트(`@RULER_CLAUDE.md`, 정본 `.ruler/10-safety.md`)를 따른다.
-> 아래 목록은 그중 저장소 고유 항목이며 `.claude/settings.json` 의 deny 와 짝을 이루는 deny 연동 대상이다.
+<!-- 공통 안전 규칙의 정본은 .ruler/10-safety.md(→ @RULER_CLAUDE.md 임포트)와
+     .claude/settings.json 의 deny(강제)다. deny 에는 실쓰기 플래그(--apply·--yes·--no-dry-run)와
+     .env 접근 차단이 더 있으며, 강제되는 전체 목록은 그쪽이 정본이다. 아래는 대표 항목만 남긴
+     지시문이므로, 새 위험 명령은 deny(강제)에 먼저 넣을 것. -->
+> 공통 안전 규칙은 임포트(`@RULER_CLAUDE.md`, 정본 `.ruler/10-safety.md`)와 deny 를 따른다.
+> 아래는 대표 항목이며, 실쓰기 플래그·`.env` 차단 등 강제되는 전체 목록은 deny(`.claude/settings.json`)가 정본이다.
 - `git push` — 원격 저장소 반영
 - 대화형 확인 프롬프트(`[y/N]`)에 `y` 응답하는 행위 일체
 
