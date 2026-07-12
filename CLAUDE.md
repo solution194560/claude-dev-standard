@@ -55,8 +55,8 @@ python3 -c "import json;json.load(open('templates/.claude/settings.json.example'
 
 | 단계 | 에이전트 | 모델 (외부 검증) | 산출물(게이트) |
 |---|---|---|---|
-| 1 계획 수립 | plan-writer | Opus 4.8 | PLAN_<주제>.md |
-| 2 계획 점검 | plan-reviewer | Opus 4.8 (+GPT-5.5) | *_REVIEW.md — APPROVE/REVISE **권고** |
+| 1 계획 수립 | plan-writer | Fable 5 | PLAN_<주제>.md |
+| 2 계획 점검 | plan-reviewer | Sonnet 5 (+GPT-5.5) | *_REVIEW.md — APPROVE/REVISE **권고** |
 | 3 구현 | implementer | Sonnet 5 | 코드 + CHANGELOG (Phase 단위) |
 | 4 구현 검증 | impl-verifier | Opus 4.8 (+GPT-5.5) | *_VERIFY_*.md — PASS/FAIL **권고** |
 | 5 최종 테스트 | final-tester | Sonnet 5 | *_FINAL_*.md — DONE/BLOCKED **권고** |

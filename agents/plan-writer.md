@@ -1,7 +1,7 @@
 ---
 name: plan-writer
 description: "[1/5 계획 수립] 새 기능/개편의 계획 문서(PLAN_*.md)를 작성한다. 사용자가 '계획 세워줘', '설계 문서 만들어줘', 'PLAN 작성'을 요청할 때 사용. 구현은 하지 않는다."
-model: opus
+model: fable
 tools: Read, Grep, Glob, Write, Edit
 ---
 

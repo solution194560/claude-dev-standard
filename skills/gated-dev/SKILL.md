@@ -44,8 +44,8 @@ AI 코딩의 전형적 실패 네 가지 — 계획 없이 바로 구현, 자기
 
 | 단계 | 에이전트 | 모델(외부 검증) | 산출물 |
 |---|---|---|---|
-| 1 계획 수립 | plan-writer | Opus | `PLAN_<주제>.md` |
-| 2 계획 점검 | plan-reviewer | Opus (+Codex) | `_REVIEW.md` (APPROVE/REVISE **권고**) |
+| 1 계획 수립 | plan-writer | Fable | `PLAN_<주제>.md` |
+| 2 계획 점검 | plan-reviewer | Sonnet (+Codex) | `_REVIEW.md` (APPROVE/REVISE **권고**) |
 | — 판정 | gate-judge | Opus | `_REVIEW_JUDGE.md` (**확정**) — REVISE면 1로 |
 | 3 구현 | implementer | Sonnet | 코드 + CHANGELOG |
 | 4 구현 검증 | impl-verifier | Opus (+Codex) | `_VERIFY_<phase>.md` (PASS/FAIL **권고**) |

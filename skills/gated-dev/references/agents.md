@@ -9,8 +9,8 @@
 
 | # | 에이전트 | 기본 모델 | 역할 | 산출물 | 소스 수정 |
 |---|---|---|---|---|---|
-| 1 | plan-writer | Opus | 계획 문서 작성 | `PLAN_*.md` | ❌ |
-| 2 | plan-reviewer | Opus | 계획 비판적 점검 | `*_REVIEW.md` (APPROVE/REVISE 권고) | ❌ |
+| 1 | plan-writer | Fable | 계획 문서 작성 | `PLAN_*.md` | ❌ |
+| 2 | plan-reviewer | Sonnet | 계획 비판적 점검 | `*_REVIEW.md` (APPROVE/REVISE 권고) | ❌ |
 | 3 | implementer | Sonnet | 계획대로 구현 | 코드 + CHANGELOG | ✅ |
 | 4 | impl-verifier | Opus | 구현 검증 + 테스트 직접 실행 | `*_VERIFY_*.md` (PASS/FAIL 권고) | ❌ |
 | 5 | final-tester | Sonnet | 실데이터 e2e 최종 테스트 | `*_FINAL_*.md` (DONE/BLOCKED 권고) | ❌ |

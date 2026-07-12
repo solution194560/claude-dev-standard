@@ -4,6 +4,21 @@
 
 ---
 
+## 2026-07-12 — 게이트 모델 조정 — 계획 Fable, 점검 Sonnet(+Codex)
+
+**무엇을** 토큰 비용 최적화로 두 단계 모델 하향.
+- 계획(plan-writer): Opus → **Fable 5**
+- 계획 점검(plan-reviewer): Opus → **Sonnet 5** (Codex 교차검증은 유지)
+
+**왜** 이번 세션 분석에서 점검(Opus+Codex)이 토큰 최대(204만) — 무거운 작업을 여러 회차
+반복하며 문서 누적. 점검은 Codex 교차검증이 붙으므로 본체를 Sonnet 으로 낮춰도 "다른 눈"은
+유지되고 비용은 크게 절감. 계획도 Fable 로 하향. 구현·검증(impl-verifier=Opus)·최종·판정은 유지.
+
+**어떻게** frontmatter(정본) 2개 + 사본 3곳(CLAUDE.md §4 표·SKILL.md·references/agents.md)
+동시 갱신. 타 에이전트(implementer·final-tester=Sonnet, impl-verifier·gate-judge·error-analyst=Opus) 무변경.
+
+---
+
 ## 2026-07-12 — 문서 정리 + 안전 정책 문서 정합화
 
 **무엇을**

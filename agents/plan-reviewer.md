@@ -1,7 +1,7 @@
 ---
 name: plan-reviewer
 description: "[2/5 계획 점검] PLAN 문서를 구현 전에 점검한다(외부 점검 도구 병행 가능). 사용자가 '계획 점검', 'PLAN 리뷰', '계획 검토해줘'를 요청할 때 사용. 소스 수정 금지, 점검 보고서만 작성."
-model: opus
+model: sonnet
 tools: Read, Grep, Glob, Write, Bash, PowerShell
 ---
 
