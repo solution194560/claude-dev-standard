@@ -6,6 +6,8 @@
 
 ## 2026-07-12 — [구현 3단계] Ruler 규칙 배포 변환 계층 Phase 1·2a 구현 (implementer)
 
+**최종 테스트 통과(2026-07-12)** — gate-judge DONE 확정([PLAN_RULER_FINAL_2bc_JUDGE.md](PLAN_RULER_FINAL_2bc_JUDGE.md), 시나리오 15/15 PASS·수용 기준 8/8 충족).
+
 **수정 회차(같은 날)** 구현 검증 게이트 FAIL 확정([PLAN_RULER_VERIFY_P1-2a_JUDGE.md](PLAN_RULER_VERIFY_P1-2a_JUDGE.md))
 반려 → 확인 결함 2건을 `ruler-test/run-ruler-test.sh` 에서만 수정. ① P0 — 시나리오 0 판정
 diff 종료코드를 캡처해 재흡수 확인 시 "도입 보류" 기록(diff 원문·head -30 실측 보존, 가변

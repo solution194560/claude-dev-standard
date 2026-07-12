@@ -95,6 +95,14 @@ claude-dev-standard/
 점검으로 폴백), 프로필의 "외부 점검 도구"에 `없음`이라 적으면 됩니다. 설정·문제 해결은
 [agents](skills/gated-dev/references/agents.md).
 
+## Ruler 규칙 배포 (시험 도입)
+
+`.ruler/`의 공통 안전·프로세스 규칙을 Claude(`RULER_CLAUDE.md`)·Codex(`AGENTS.md`) 대상
+파일로 변환·배포하는 계층입니다. 변환 도구로 MIT 라이선스의
+[intellectronica/ruler](https://github.com/intellectronica/ruler)(작성자 Eleanor Berger)를
+사용하며, 이 저장소에 Ruler 코드는 포함되지 않고 `npx @intellectronica/ruler`로 실행
+시점에 내려받습니다. 적용 범위·검증 결과는 [RULER_TEST_RESULT.md](RULER_TEST_RESULT.md) 참조.
+
 ## 라이선스
 
 MIT — [LICENSE](LICENSE)
