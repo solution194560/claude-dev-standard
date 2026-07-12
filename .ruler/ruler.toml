@@ -1,0 +1,21 @@
+# Ruler 대상·출력 설정 (claude-dev-standard 1차 테스트)
+# 이 파일은 .md 가 아니므로 규칙 이어붙이기 대상에서 제외된다.
+
+default_agents = ["claude", "codex"]
+
+[gitignore]
+enabled = true            # 복제본 apply 시 생성물을 .gitignore 자동 관리 블록에 등록 (동작 검증 대상)
+
+[backup]
+enabled = true            # apply 시 기존 파일이 있으면 .bak 백업 생성
+
+[mcp]
+enabled = false           # MCP 변환 비활성 (1차 제외)
+
+[agents.claude]
+enabled = true
+output_path = "RULER_CLAUDE.md"
+
+[agents.codex]
+enabled = true
+output_path = "AGENTS.md"

@@ -4,6 +4,91 @@
 
 ---
 
+## 2026-07-12 — [구현 3단계] Ruler 규칙 배포 변환 계층 Phase 1·2a 구현 (implementer)
+
+**수정 회차(같은 날)** 구현 검증 게이트 FAIL 확정([PLAN_RULER_VERIFY_P1-2a_JUDGE.md](PLAN_RULER_VERIFY_P1-2a_JUDGE.md))
+반려 → 확인 결함 2건을 `ruler-test/run-ruler-test.sh` 에서만 수정. ① P0 — 시나리오 0 판정
+diff 종료코드를 캡처해 재흡수 확인 시 "도입 보류" 기록(diff 원문·head -30 실측 보존, 가변
+메타데이터 가능성 명기 — Phase 2c 정규화 재판정용) 후 이후 시나리오 미진행 exit 1, 통과
+시에만 진행. ② P2 — 시나리오 9 deny grep 을 4패턴(`--apply`·`--yes`·`--no-dry-run`·
+`git push`)으로 완성. `bash -n`·§0 테스트 명령 PASS 재확인, 타 파일 무수정.
+
+**무엇을** [PLAN_RULER.md](PLAN_RULER.md)(4차 개정본, gate-judge 4차 APPROVE 통과 조건부 —
+[PLAN_RULER_REVIEW_JUDGE.md](PLAN_RULER_REVIEW_JUDGE.md)) 의 Phase 1 전체 + Phase 2a(스크립트
+작성) 구현. Phase 2b(사람 실행)·2c(로그 분석)·Phase 3(본 저장소 반영)은 이번 범위 밖 —
+**Phase 2b 사람 실행 대기** 상태로 종료.
+
+**어떻게**
+- `.ruler/00-overview.md`·`10-safety.md`·`20-process.md`·`30-evidence.md`·`ruler.toml`
+  (PLAN §3.2 초안을 그대로 작성 — Ruler 알파벳순 이어붙이기로 개요→안전→프로세스→증거 순서 고정)
+- `ruler-test/run-ruler-test.sh` (PLAN §5.1~§5.3 설계대로 작성, 실행은 사람 몫 — 이 세션은
+  실행하지 않음): REPO_ROOT 절대경로 로그 고정(P0-A) → 스크래치 clone → node/npx 버전·
+  `--help` 실물 검증 → dry-run(시나리오 1) → 시나리오 0(2회 apply + 정규화용 원시 증거) →
+  fresh clone 재초기화(P1-3') → 본 apply → 스크립트 담당 시나리오 점검(2·3·4·5 부분·9 부분·13)
+  → revert(11) → 재적용(12) → 시나리오 10 교차 확인 인용
+
+**계획 대비 편차**
+- JUDGE 4차 판정 후속 처리 조건 1(단계별 종료코드 캡처)을 반영해, PLAN §5.1 코드블록의
+  전역 `set -e` + `diff …; echo "exit=$?"` 형태(이 조합은 `diff`가 실패로 처리되는 즉시
+  `set -e`가 스크립트를 중단시켜 `echo`가 실행되지 않는 문제가 있음)를 그대로 쓰지 않고,
+  전역 `set -e` 없이 `run_fatal`(설정 단계 — 실패 시 로그 남기고 즉시 중단)·`run_step`
+  (판정 대상 명령 — 0이 아닌 종료코드를 판정 정보로 로그에 남기고 스크립트는 계속)
+  두 헬퍼로 모든 단계를 명시적으로 감쌌다. PLAN이 "`set -e`(또는 단계별 종료코드 검사)"로
+  대안을 명시적으로 허용한 범위 내의 구현 선택이다.
+- PLAN §5.1 REPO_ROOT 예시의 두 안(하드코딩 절대경로 / `$(cd "$(dirname "$0")/.." && pwd)`)
+  중 후자를 채택 — 특정 사용자 경로를 스크립트에 고정하지 않기 위함(PLAN이 "또는"으로 명시한
+  대안).
+- 시나리오 0 diff 정규화(P1-5')의 실제 필터 패턴은 스크립트가 추측해 하드코딩하지 않고,
+  `head -30` 원시 증거만 로그에 남겨 Phase 2c 로그 분석 단계에서 실측 후 결정하도록 함(PLAN이
+  "실측된 가변 행 패턴만 제외"라고 명시 — 사전 추측 금지 취지로 해석).
+- PLAN §4 Phase 2a의 "(필요 시) 점검 보조 스크립트"는 작성하지 않음 — 정규화·판정 로직을
+  전부 주 스크립트의 원시 증거 로깅으로 대체해 불필요.
+- 그 외 편차 없음. `.ruler/*.md` 4개·`ruler.toml`은 PLAN §3.2 원문 그대로.
+
+**검증**
+- `bash -n ruler-test/run-ruler-test.sh` 문법 통과
+- `.ruler/ruler.toml` 파싱 검증 — 이 환경의 `python3`가 3.9.6이라 표준 라이브러리
+  `tomllib`(3.11+ 필요)이 없어 `python3 -c "import tomllib..."` 는 `ModuleNotFoundError`.
+  대체로 설치돼 있던 `toml` 패키지(0.10.2)로 파싱해 `OK` 확인(동등한 TOML 문법 검증) —
+  환경 제약이며 파일 결함 아님. impl-verifier 재확인 시 이 환경차 참고.
+- CLAUDE.md §0 테스트 명령(`plugin.json`·`marketplace.json` JSON 검증) PASS
+- `git status --porcelain` — 신규 파일은 `.ruler/`·`ruler-test/`뿐, `agents/`·`skills/`·
+  `templates/`·`CLAUDE.md`는 `git diff --stat`으로 무수정 확인
+- Ruler·npx 명령은 이 세션에서 실행하지 않음(`--help` 포함 — PLAN §4 Phase 2a 지시 준수)
+
+**impl-verifier 확인 포인트**
+1. `.ruler/ruler.toml`의 `[agents.claude] output_path = "RULER_CLAUDE.md"` 존재(§0 보존의 핵심).
+2. `run-ruler-test.sh`가 본 저장소 경로에서 Ruler 실쓰기(apply/revert)를 실행하지 않고
+   전부 `$SCRATCH`(스크래치 복제본)에서만 실행하는 구조인지(주석·pwd 로깅 확인).
+3. JUDGE 후속 처리 조건 1(단계별 종료코드 캡처)이 `run_fatal`/`run_step` 두 헬퍼로 실제
+   반영됐는지, 위 "계획 대비 편차" 문단의 논리가 타당한지.
+4. `git push`·원격 반영·`[y/N]` 자동 응답이 스크립트에 없는지.
+
+**관련 문서** [PLAN_RULER.md](PLAN_RULER.md), [PLAN_RULER_REVIEW_JUDGE.md](PLAN_RULER_REVIEW_JUDGE.md)
+
+---
+
+## 2026-07-12 — [계획 단계] Ruler 규칙 배포 변환 계층 1차 테스트 계획 작성·개정(4차)
+
+**무엇을** Ruler(`@intellectronica/ruler`)를 규칙 배포 변환 계층으로 제한 적용하는
+1차 테스트 계획 문서 [PLAN_RULER.md](PLAN_RULER.md) 작성 (5단계 게이트 1단계 산출물).
+1~3차 계획 점검이 모두 REVISE 확정([PLAN_RULER_REVIEW_JUDGE.md](PLAN_RULER_REVIEW_JUDGE.md))
+— 2차 개정(수정 요구 7건), 3차 개정(사람 수동 실행 전환 등 6건)에 이어, 3차 점검(2차 요구
+5건 해소·1건 부분해소로 계획 골격 성립)의 신규 결함 4건을 반영해 **4차 개정** — 스크립트
+로그 경로 본 저장소 절대경로 고정(P0-A), 시나리오 8·14 절차 본문 확정(P1-B), 시나리오 5
+Codex 확인 명령 수준 구체화(P1-C), 실패·재실행 규칙 신설(P2-D), 시나리오 6·7 등가성 한계
+명시(상세는 계획 문서 개정 이력).
+
+**왜** 공통 안전·프로세스 규칙을 `.ruler/` 단일 원본에서 Claude·Codex 두 대상으로
+반복·복원 가능하게 배포하되 기존 게이트·§0 프로필을 훼손하지 않는지 검증하기 위해.
+
+**상태** 계획 단계 — 구현 금지. 4차 개정본으로 plan-reviewer 재점검 + gate-judge 재판정 대기.
+
+**관련 문서** [Ruler-적용-테스트-설계.md](Ruler-적용-테스트-설계.md)(상위 설계),
+[PLAN_RULER_REVIEW.md](PLAN_RULER_REVIEW.md)(3차 점검 보고서)
+
+---
+
 ## 2026-07-12 — quickstart에 워크스페이스 신뢰 승인 안내 추가
 
 **무엇을** 5단계 파이프라인 e2e 검증 중 발견한 헤드리스 실행 블로커를 신뢰 안내로 문서화.
