@@ -1,6 +1,6 @@
 # claude-dev-standard 운영 가이드
 
-최종 업데이트: 2026-07-11
+최종 업데이트: 2026-07-12
 
 ## 0) 프로젝트 프로필 (에이전트 참조용 — 필수 기재)
 
@@ -8,13 +8,15 @@
 |---|---|
 | 개요 | 5단계 게이트 개발 프로세스를 Claude Code **플러그인**으로 배포하는 저장소. 스킬(`skills/gated-dev`)·에이전트 7종(`agents/`)·프로젝트 초기화 템플릿(`templates/`)을 제공하며 애플리케이션 코드는 없다. |
 | 실행 명령 | 없음 — 플러그인·문서 저장소 |
-| 테스트 명령 | `python3 -c "import json;json.load(open('.claude-plugin/plugin.json'));json.load(open('.claude-plugin/marketplace.json'));print('OK')"` |
+| 테스트 명령 | `python3 -c "import json;json.load(open('.claude-plugin/plugin.json'));json.load(open('.claude-plugin/marketplace.json'));print('OK')"` · `bash ruler-test/check-sync.sh` (정본↔생성물 일치) |
 | 주요 산출물 경로 | `.claude-plugin/*.json`, `skills/**`, `agents/**`, `templates/**`, `README.md` |
 | 외부 점검 도구 | `codex exec -m gpt-5.5 --skip-git-repo-check -C . --sandbox read-only -` (지시문은 stdin 으로 전달) |
 
 ### 위험 작업 목록 (에이전트 실행 금지 — 드라이런까지만)
 <!-- 여기에 명령을 추가할 때마다 .claude/settings.json 의 "deny" 에도 같은 명령을 추가할 것.
      이 목록은 지시문이고 deny 는 강제다. 둘이 어긋나면 지시문만 남는다. -->
+> 공통 안전 규칙은 임포트(`@RULER_CLAUDE.md`, 정본 `.ruler/10-safety.md`)를 따른다.
+> 아래 목록은 그중 저장소 고유 항목이며 `.claude/settings.json` 의 deny 와 짝을 이루는 deny 연동 대상이다.
 - `git push` — 원격 저장소 반영
 - 대화형 확인 프롬프트(`[y/N]`)에 `y` 응답하는 행위 일체
 
@@ -61,6 +63,7 @@ python3 -c "import json;json.load(open('templates/.claude/settings.json.example'
 
 > 모델 열은 각 에이전트 frontmatter 의 `model:` 이 정본이다(바꾸면 여기도 갱신).
 > `(+GPT-5.5)` 는 §0 "외부 점검 도구"(Codex)로 하는 교차 검증 모델이다.
+> 게이트 판정·증거·공통 안전 규칙은 공통 규칙(`@RULER_CLAUDE.md`, 정본 `.ruler/`)을 따른다.
 
 - **단계별 모델·토큰 표기(세션이 담당)**: 세션(오케스트레이터)은 각 단계의 서브에이전트를
   호출하기 **직전에** 그 단계 모델을 한 줄로 코멘트한다 — 예: `▶ [4단계 구현 검증]
@@ -73,14 +76,9 @@ python3 -c "import json;json.load(open('templates/.claude/settings.json.example'
   경우에도 착수 전 `▶ [구현] 세션 직접 · <모델>` 코멘트를 달되, 세션 인라인 작업은
   토큰 측정 수단이 없으므로 토큰 표기는 생략하고 그 사실을 언급한다.
 
-- **게이트 판정은 gate-judge 가 확정한다.** 점검·검증·최종 테스트 에이전트는 증거를
-  모으고 **권고**만 하며, 그 직후 반드시 gate-judge 를 호출해 판정(APPROVE/REVISE,
-  PASS/FAIL, DONE/BLOCKED)을 확정한다. 게이트 에이전트의 권고만으로 다음 단계에
-  진행하지 않는다(증거 수집자와 판정자 분리). 호출 예: "gate-judge 로 구현 검증 판정해줘"
-- 점검(2)·검증(4)은 §0 프로필의 "외부 점검 도구"가 설정된 경우 그 도구의 결과를
-  판정 기준으로 삼는다(도구 실패 시 에이전트 직접 점검 폴백, 사유 명기).
-  테스트 실행은 도구와 무관하게 에이전트가 항상 직접 수행.
-- 모든 에이전트: §0 "위험 작업 목록"의 실쓰기 금지(드라이런까지).
+- 게이트 판정은 gate-judge 가 확정한다(권고/확정·착수 차단 상세는 공통 규칙 참조).
+  호출 예: "gate-judge 로 구현 검증 판정해줘"
+- 테스트 실행은 외부 점검 도구와 무관하게 에이전트가 항상 직접 수행한다.
 - 단건 수정(버그픽스 등)은 경량 경로 가능: 설계 확인 → 구현 → 테스트 →
   실데이터 확인 → CHANGELOG 기록.
 - **에러 대응 경로**(테스트 실패·운영 에러): error-analyst 로 근본 원인 분석
@@ -98,3 +96,12 @@ python3 -c "import json;json.load(open('templates/.claude/settings.json.example'
 - `.claude-plugin/plugin.json`·`marketplace.json` 이 플러그인·마켓플레이스 매니페스트다.
 - `templates/.gitignore.example` 을 `templates/.gitignore` 로 이름을 바꾸지 않는다.
   저장소 자신의 git 이 그 규칙을 적용해 버린다.
+- `.ruler/` 는 공통 안전·프로세스·증거 규칙의 **정본**이다. 루트 `RULER_CLAUDE.md`·`AGENTS.md` 는
+  Ruler **생성물**(직접 수정 금지, 커밋 대상)이며, 내용 변경은 반드시 `.ruler/` → 사람 apply
+  경로로만 한다(dry-run → apply → `git diff` 확인 → `check-sync` → 생성물 포함 커밋). 에이전트는
+  `ruler apply`/`revert` 를 실행하지 않는다(`check-sync.sh` 는 읽기 전용이라 실행 가능).
+
+<!-- Ruler 생성물 임포트 — 본 저장소(claude-dev-standard) 개발 전용.
+     templates/ 로 배포 금지: 사용자 프로젝트에는 RULER_CLAUDE.md·.ruler/ 가 없어 깨진다.
+     공통 규칙 정본은 .ruler/ 이며 RULER_CLAUDE.md 는 생성물(직접 수정 금지). -->
+@RULER_CLAUDE.md

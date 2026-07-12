@@ -4,6 +4,26 @@
 
 ---
 
+## 2026-07-12 — Ruler 정본 이관 Phase 2·3 완료 (CLAUDE.md 슬림화 + 임포트)
+
+**무엇을** 정본 이관 Phase 2(사람 apply·생성물 커밋)·Phase 3(CLAUDE.md 슬림화) 완료.
+- **Phase 2** 사람이 본 저장소에서 `ruler apply`(§3.5) 실행 → 생성물 `RULER_CLAUDE.md`·`AGENTS.md`
+  생성·커밋(git 추적). `.codex/config.toml` 미생성·`.gitignore` 무변경·check-sync 일치 확인.
+- **Phase 3** `CLAUDE.md` 슬림화 — §4 의 공통 규칙 중복 3건(gate-judge 확정 문단·외부 도구 판정
+  기준 문장·"모든 에이전트 실쓰기 금지" 불릿)을 삭제(정본 `.ruler/` 20-process·30-evidence·
+  10-safety 로 이관). §0 위험 작업 목록 서두·§4 표 아래에 공통 규칙 참조 한 줄씩 추가, §0 테스트
+  명령에 `check-sync.sh` 추가, §5 에 정본·생성물 운영 정책 추가, 맨 아래 `@RULER_CLAUDE.md`
+  임포트 블록 추가(본 저장소 개발 전용·templates 배포 금지 주석).
+
+**검증(오프라인)** O1~O8 전부 통과 — 삭제 키 문구 4건 `grep -F` 부재, 잔류 대상 보존, 임포트·주석
+존재, check-sync exit 0, 생성물 git 추적, JSON·`bash -n` OK, `agents/`·`skills/`·`templates/`·
+`.gitignore` 무변경. 삭제 3건의 대응 의미가 생성물(정본 `.ruler/`)에 보존됨을 확인(의미 대조).
+
+**남은 실데이터 검증** R3(새 Claude Code 세션에서 `@RULER_CLAUDE.md` 임포트 실제 로드 확인 —
+사람), R4(Codex 가 AGENTS.md 안전룰 인식 — 선택). R2 반복성은 apply 재실행 시 `git diff` 0 으로 확인.
+
+---
+
 ## 2026-07-12 — Ruler 정본 이관 Phase 1 (정본·도구 준비, 경량 경로)
 
 **무엇을** [PLAN_RULER_MIGRATION.md](PLAN_RULER_MIGRATION.md) 계획 점검 APPROVE 확정
