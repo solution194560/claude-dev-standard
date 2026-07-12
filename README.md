@@ -95,35 +95,16 @@ claude-dev-standard/
 점검으로 폴백), 프로필의 "외부 점검 도구"에 `없음`이라 적으면 됩니다. 설정·문제 해결은
 [agents](skills/gated-dev/references/agents.md).
 
-## Ruler 규칙 배포
+## 규칙 파일 구성
 
-`.ruler/`가 공통 안전·프로세스·증거 규칙의 **단일 정본**이고, 이를 Claude(`RULER_CLAUDE.md`)·
-Codex(`AGENTS.md`) 대상 파일로 변환·배포합니다. `CLAUDE.md`는 프로젝트 프로필만 남기고 공통
-규칙은 맨 아래 `@RULER_CLAUDE.md` 임포트로 로드합니다(중복 제거). 변환 도구로 MIT 라이선스의
-[intellectronica/ruler](https://github.com/intellectronica/ruler)(작성자 Eleanor Berger)를
-사용하며, 이 저장소에 Ruler 코드는 포함되지 않고 `npx @intellectronica/ruler@0.3.44`로 실행
-시점에 내려받습니다.
+개발 규칙의 **정본은 `CLAUDE.md` 하나**입니다 — git 에 있으면 Claude Code 가 자동으로
+로드하므로 별도 배포 도구가 필요 없습니다. 루트 `AGENTS.md` 는 Codex(외부 점검 도구)가
+저장소를 읽을 때 참조하는 **수동 유지 요약본**이며, 어긋나면 CLAUDE.md 를 따릅니다.
 
-### 정본↔생성물 운영
-
-| 파일 | 구분 | 규칙 |
-|---|---|---|
-| `.ruler/00~30-*.md`, `ruler.toml` | 정본 | 규칙 변경은 여기서만 한다 |
-| `RULER_CLAUDE.md`, `AGENTS.md` | 생성물 | 직접 수정 금지 · git 추적 |
-| `ruler-test/check-sync.sh` | 도구 | 정본↔생성물 일치 대조(읽기 전용) |
-
-`.ruler/`를 수정하면 **사람이** 본 저장소에서 재생성 절차를 수행합니다 — 에이전트는 `ruler apply`를
-실행하지 않습니다.
-
-```bash
-npx @intellectronica/ruler@0.3.44 apply --agents claude,codex --no-mcp --no-skills --no-gitignore --no-backup --verbose
-git diff --stat            # 변경이 생성물 2개뿐인지 확인
-bash ruler-test/check-sync.sh   # 정본↔생성물 일치(exit 0) 확인
-# .ruler/ 원본 + 생성물 2개를 같은 커밋으로 커밋
-```
-
-1차 도입은 5단계 게이트로 시나리오 15/15를, 정본 이관은 오프라인 8건·실데이터 4건 검증을
-통과했습니다. 진행 과정과 게이트 판정 기록은 git 커밋 히스토리에 남아 있습니다.
+> 한때 [intellectronica/ruler](https://github.com/intellectronica/ruler)(MIT) 기반 규칙 배포
+> 계층을 시험 도입했으나(시나리오 15/15 검증 통과), 단일 저장소·단일 도구 환경에서는
+> 과한 구조라 제거했습니다. 도입·검증·제거 과정은 git 커밋 히스토리에 남아 있으며,
+> 여러 AI 도구를 함께 쓰게 되면 그 시점에 재도입을 검토합니다.
 
 ## 라이선스
 

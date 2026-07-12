@@ -4,6 +4,32 @@
 
 ---
 
+## 2026-07-12 — Ruler 계층 제거 — 규칙 정본을 CLAUDE.md 하나로 원점 복귀
+
+**무엇을** 시험 도입했던 Ruler 규칙 배포 계층을 제거. 규칙 정본은 CLAUDE.md 하나로 충분하다는
+판단 — git 에 있으면 Claude Code 가 자동 로드하므로 변환 도구가 불필요하고, Codex 는 지시문을
+매번 stdin 으로 받으므로 생성 파일 없이 동작(1차 게이트 전 과정이 그 방식으로 통과했음).
+
+**왜** 단일 저장소·단일 도구 환경에서 실익 대비 유지비 과다 — `.ruler/` 수정 시 사람 apply →
+check-sync → 생성물 커밋 절차, 버전 고정 관리, 정본·생성물 이중 구조. Ruler 는 Cursor 등
+여러 AI 도구를 함께 쓸 때 가치가 있으며, 그 시점에 재도입 검토(도입·검증 기록은 git 히스토리 보존).
+
+**어떻게**
+- 삭제: `.ruler/`(5개)·`RULER_CLAUDE.md`·`ruler-test/`(스크립트 2개)
+- `CLAUDE.md` 자기완결 복원 — `@RULER_CLAUDE.md` 임포트 제거, 이관했던 공통 규칙 3건
+  (gate-judge 확정 문단·외부 도구 판정 기준·실쓰기 금지 불릿) §4 복귀 + 원시 증거 요구 1줄 추가,
+  §0 위험 작업 목록에 실쓰기 플래그·드라이런 항목 보강(1차 정합화의 취지 유지),
+  §0 테스트 명령에서 check-sync 제거, §5 를 AGENTS.md 수동 유지 안내로 교체
+- `AGENTS.md` — Ruler 생성물에서 **수동 유지 요약본**으로 전환(Generated 헤더·Source 주석·
+  생성물 운영 절 제거, 정본은 CLAUDE.md 명시)
+- `README.md` — Ruler 절을 "규칙 파일 구성"(정본 CLAUDE.md + AGENTS.md 요약본 + 시험 도입
+  이력 한 문단)으로 교체
+
+**검증** §0 JSON 테스트 명령 PASS, 운영 문서(CLAUDE.md·README·AGENTS.md·skills·agents·templates)에
+ruler-test·RULER_CLAUDE·`.ruler/` 잔여 참조 없음 확인.
+
+---
+
 ## 2026-07-12 — Codex 교차검증 모델 gpt-5.6-sol 로 변경
 
 **무엇을** 외부 점검 도구(Codex) 모델을 `gpt-5.5` → `gpt-5.6-sol` 로 교체. `gpt-5.6`(하이픈
