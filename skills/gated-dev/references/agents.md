@@ -12,7 +12,7 @@
 | 1 | plan-writer | Fable | 계획 문서 작성 | `PLAN_*.md` | ❌ |
 | 2 | plan-reviewer | Sonnet | 계획 비판적 점검 | `*_REVIEW.md` (APPROVE/REVISE 권고) | ❌ |
 | 3 | implementer | Sonnet | 계획대로 구현 | 코드 + CHANGELOG | ✅ |
-| 4 | impl-verifier | Opus | 구현 검증 + 테스트 직접 실행 | `*_VERIFY_*.md` (PASS/FAIL 권고) | ❌ |
+| 4 | impl-verifier | Sonnet | 구현 검증 + 테스트 직접 실행 | `*_VERIFY_*.md` (PASS/FAIL 권고) | ❌ |
 | 5 | final-tester | Sonnet | 실데이터 e2e 최종 테스트 | `*_FINAL_*.md` (DONE/BLOCKED 권고) | ❌ |
 | — | gate-judge | Opus | 게이트 판정 **확정**(2·4·5단계) | `*_JUDGE.md` | ❌ (CHANGELOG만) |
 | — | error-analyst | Opus | 에러 근본 원인 분석·수정 방향 | `FIX_*.md` | ❌ |

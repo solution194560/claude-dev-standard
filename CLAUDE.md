@@ -58,7 +58,7 @@ python3 -c "import json;json.load(open('templates/.claude/settings.json.example'
 | 1 계획 수립 | plan-writer | Fable 5 | PLAN_<주제>.md |
 | 2 계획 점검 | plan-reviewer | Sonnet 5 (+GPT-5.5) | *_REVIEW.md — APPROVE/REVISE **권고** |
 | 3 구현 | implementer | Sonnet 5 | 코드 + CHANGELOG (Phase 단위) |
-| 4 구현 검증 | impl-verifier | Opus 4.8 (+GPT-5.5) | *_VERIFY_*.md — PASS/FAIL **권고** |
+| 4 구현 검증 | impl-verifier | Sonnet 5 (+GPT-5.5) | *_VERIFY_*.md — PASS/FAIL **권고** |
 | 5 최종 테스트 | final-tester | Sonnet 5 | *_FINAL_*.md — DONE/BLOCKED **권고** |
 | 판정 | gate-judge | Opus 4.8 | *_JUDGE.md — 위 게이트(2·4·5)의 판정 **확정** |
 | 에러 대응 | error-analyst | Opus 4.8 | FIX_<주제>.md |
@@ -69,7 +69,7 @@ python3 -c "import json;json.load(open('templates/.claude/settings.json.example'
 
 - **단계별 모델·토큰 표기(세션이 담당)**: 세션(오케스트레이터)은 각 단계의 서브에이전트를
   호출하기 **직전에** 그 단계 모델을 한 줄로 코멘트한다 — 예: `▶ [4단계 구현 검증]
-  impl-verifier · Opus 4.8, 외부 검증 GPT-5.5(Codex)`. 호출이 **끝나면** 하네스가
+  impl-verifier · Sonnet 5, 외부 검증 GPT-5.5(Codex)`. 호출이 **끝나면** 하네스가
   반환한 서브에이전트 토큰을 `⏱ 4단계 토큰: N` 으로 보고하고, 외부 점검 도구를 쓴
   단계(2·4)는 codex 응답의 `tokens used` 값도 함께 적는다. **서브에이전트는 자기 토큰을
   스스로 세지 못하므로** 이 코멘트·집계는 반드시 세션이 한다(에이전트에게 위임 금지).

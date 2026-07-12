@@ -48,7 +48,7 @@ AI 코딩의 전형적 실패 네 가지 — 계획 없이 바로 구현, 자기
 | 2 계획 점검 | plan-reviewer | Sonnet (+Codex) | `_REVIEW.md` (APPROVE/REVISE **권고**) |
 | — 판정 | gate-judge | Opus | `_REVIEW_JUDGE.md` (**확정**) — REVISE면 1로 |
 | 3 구현 | implementer | Sonnet | 코드 + CHANGELOG |
-| 4 구현 검증 | impl-verifier | Opus (+Codex) | `_VERIFY_<phase>.md` (PASS/FAIL **권고**) |
+| 4 구현 검증 | impl-verifier | Sonnet (+Codex) | `_VERIFY_<phase>.md` (PASS/FAIL **권고**) |
 | — 판정 | gate-judge | Opus | `_VERIFY_<phase>_JUDGE.md` (**확정**) — FAIL이면 3으로 |
 | 5 최종 테스트 | final-tester | Sonnet | `_FINAL_<phase>.md` (DONE/BLOCKED **권고**) |
 | — 판정 | gate-judge | Opus | `_FINAL_<phase>_JUDGE.md` (**확정**) — DONE이면 CHANGELOG 기록 |
@@ -67,7 +67,7 @@ AI 코딩의 전형적 실패 네 가지 — 계획 없이 바로 구현, 자기
 
 ### 모델·토큰 표기 (세션이 담당)
 세션(오케스트레이터)은 각 단계 서브에이전트를 호출하기 **직전에** 모델을 한 줄로
-코멘트하고(`▶ [4단계 구현 검증] impl-verifier · Opus, 외부 검증 GPT-5.5(Codex)`),
+코멘트하고(`▶ [4단계 구현 검증] impl-verifier · Sonnet, 외부 검증 GPT-5.5(Codex)`),
 호출이 **끝나면** 하네스가 반환한 서브에이전트 토큰을 `⏱ 4단계 토큰: N`으로 보고한다.
 2·4단계는 codex 응답의 `tokens used`도 함께 적는다. **서브에이전트는 자기 토큰을
 스스로 세지 못하므로** 이 집계는 반드시 세션이 한다.

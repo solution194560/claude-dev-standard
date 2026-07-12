@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-07-12 — 구현 검증도 Sonnet 으로 (교차검증 두 단계 통일)
+
+**무엇을** 구현 검증(impl-verifier): Opus → **Sonnet 5** (Codex 교차검증 유지). 앞선 점검 조정에
+이어, `(+GPT-5.5)` 교차검증이 붙는 두 단계(2 점검·4 구현 검증)를 모두 Sonnet+Codex 로 통일.
+
+**어떻게** impl-verifier 표기 6곳 전수 갱신 — frontmatter(정본) + CLAUDE.md §4 표·모델 표기 예시
+문단 + SKILL.md 표·예시 + references/agents.md. `Opus 4.8 (+GPT-5.5)` 잔존 없음 확인.
+
+**최종 모델 배분** 계획=Fable · 점검·구현·구현검증·최종=Sonnet · 판정(gate-judge)·에러(error-analyst)=Opus.
+Opus 는 최종 판정과 에러 근본원인 분석 두 곳만 유지.
+
+---
+
 ## 2026-07-12 — 게이트 모델 조정 — 계획 Fable, 점검 Sonnet(+Codex)
 
 **무엇을** 토큰 비용 최적화로 두 단계 모델 하향.
